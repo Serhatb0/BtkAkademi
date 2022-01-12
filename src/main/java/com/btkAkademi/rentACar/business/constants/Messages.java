@@ -12,4 +12,7 @@ public class Messages {
 	public static String carUpdated = "car.updated";
 	public static String brandUpdated = "brand.updated";
 	public static String colorUpdated = "color.updated";
+	public static String individualAdded= "individual.added";
+	public static String corporateCustomerAdded= "corporate_customer_added";
+	public static String rentalAdded = "rental.added";
 }
