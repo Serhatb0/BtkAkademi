@@ -80,7 +80,7 @@ public class BrandManager implements BrandService {
 		Brand brand = this.brandDao.findById(updateBrandRequest.getId());
 		
 		if(brand == null) {
-			return new ErrorResult("Bulunamdı");
+			return new ErrorResult("brand not found");
 		}
 		brand = modelMapperService.forRequest().map(updateBrandRequest, Brand.class);
 		this.brandDao.save(brand);
