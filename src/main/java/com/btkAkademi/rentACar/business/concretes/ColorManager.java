@@ -69,7 +69,7 @@ public class ColorManager implements ColorService {
 		
 		Color color = this.colorDao.findById(updateColorRequest.getId());
 		if(color == null) {
-			return new ErrorResult("color is not found");
+			return new ErrorResult(Messages.colorIsNotFound);
 		}
 		color = modelMapperService.forRequest().map(updateColorRequest, Color.class);
 		this.colorDao.save(color);

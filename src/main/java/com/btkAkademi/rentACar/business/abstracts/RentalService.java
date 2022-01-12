@@ -1,6 +1,6 @@
 package com.btkAkademi.rentACar.business.abstracts;
 
-import com.btkAkademi.rentACar.business.requests.carRequest.CreateCarRequest;
+
 import com.btkAkademi.rentACar.business.requests.rentalRequest.CreateRentalRequest;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 

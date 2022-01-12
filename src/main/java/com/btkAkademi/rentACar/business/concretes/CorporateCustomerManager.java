@@ -9,12 +9,13 @@ import com.btkAkademi.rentACar.business.requests.customerRequest.CreateCorporate
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CorporateCustomerDao;
 import com.btkAkademi.rentACar.entities.concretes.CorporateCustomer;
-import com.btkAkademi.rentACar.entities.concretes.IndividualCustomer;
+
 
 @Service
 public class CorporateCustomerManager implements CorporateCustomerService{
@@ -52,8 +53,11 @@ public class CorporateCustomerManager implements CorporateCustomerService{
 
 
 	private Result checkIfCompanyNameExists(String companyName) {
-		// TODO Auto-generated method stub
-		return null;
+		CorporateCustomer corporateCustomer = this.corporateCustomerDao.findByCompanyName(companyName);
+		if(corporateCustomer != null) {
+			return new ErrorResult(Messages.customerIsExists);
+		}
+		return new SuccessResult();
 	}
 
 

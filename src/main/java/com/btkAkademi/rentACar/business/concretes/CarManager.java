@@ -53,7 +53,7 @@ public class CarManager implements CarService {
 
 		Car car = this.carDao.findById(updateCarRequest.getId());
 		if(car == null) {
-			return new ErrorResult("car not found");
+			return new ErrorResult(Messages.carIsNotFound);
 		}
 		
 		

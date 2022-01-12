@@ -8,8 +8,10 @@ import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.requests.customerRequest.CreateIndividualCustomer;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
+import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
+import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 
 import com.btkAkademi.rentACar.dataAccess.abstracts.IndividualCustomerDao;
@@ -34,7 +36,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	public Result add(CreateIndividualCustomer createIndividualCustomer) {
 
 		Result result = BusinessRules.run(checkIfEmailExists(createIndividualCustomer.getEmail()),
-				checkIfAgeExists(createIndividualCustomer.getBirthDate().getYear()));
+				checkIfAgeControl(createIndividualCustomer.getBirthDate().getYear()));
 
 		if (result != null) {
 			return result;
@@ -49,17 +51,22 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	private Result checkIfEmailExists(String email) {
 		IndividualCustomer individualCustomer = this.individualCustomerDao.findByEmail(email);
 		if (individualCustomer != null) {
-			return new ErrorResult("Email Zaten Mevcut");
+			return new ErrorResult(Messages.individualCustomerEmailExists);
 		}
 		return new SuccessResult();
 	}
 
-	private Result checkIfAgeExists(int age) {
+	private Result checkIfAgeControl(int age) {
 
 		if (age > 2003) {
-			return new ErrorResult("Yaşı 18 den Küçük");
+			return new ErrorResult(Messages.ageError);
 		}
 		return new SuccessResult();
+	}
+
+	@Override
+	public DataResult<IndividualCustomer> findById(int id) {
+		return new SuccessDataResult<IndividualCustomer>(this.individualCustomerDao.findById(id));
 	}
 
 }
