@@ -88,7 +88,7 @@ public class RentalManager implements RentalService {
 
 	private Result checkCarMaintenance(int id) {
 		DataResult<CarMaintenance> carMaintenance = this.carMaintenanceService.findById(id);
-		if (carMaintenance.getData().getStatus() == true) {
+		if (carMaintenance.getData() == null) {
 			return new ErrorResult("Araba Bakımda");
 		}
 		return new SuccessResult();

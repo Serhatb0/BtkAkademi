@@ -54,7 +54,8 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 
 	@Override
 	public DataResult<CarMaintenance> findById(int id) {
-		return new SuccessDataResult<CarMaintenance>(this.carMaintenanceDao.findById(id));
+	
+		return new SuccessDataResult<CarMaintenance>(this.carMaintenanceDao.findByIdAndDateOfArrivalIsNotNull(id));
 	}
 
 }
