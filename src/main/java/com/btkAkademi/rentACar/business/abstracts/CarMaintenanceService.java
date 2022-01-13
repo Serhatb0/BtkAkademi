@@ -19,6 +19,6 @@ public interface CarMaintenanceService {
 	Result add(CreateCarMaintenanceRequest carMaintenanceRequest);
 	
 	
-	DataResult<CarMaintenance> findByIdAndDateOfArrivalIsNotNull(int id);
+	boolean  findByCarIdAndDateOfArrivalIsNull(int id);
 
 }

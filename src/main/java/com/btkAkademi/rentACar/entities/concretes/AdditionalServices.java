@@ -1,7 +1,7 @@
 package com.btkAkademi.rentACar.entities.concretes;
 
-import java.time.LocalDate;
 
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,22 +21,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "car_maintenances")
-public class CarMaintenance {
+@Table(name = "additional_services")
+public class AdditionalServices {
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-
-	@Column(name = "date_of_care")
-	private LocalDate dateOfCare;
-	@Column(name = "date_of_arrival")
-	private LocalDate dateOfArrival;
-
-
+	@Column(name = "name")
+	private String name;
+	
 	@ManyToOne
-	@JoinColumn(name = "car_id")
-	private Car car;
+	@JoinColumn(name="rental_id")
+	private Rental rental;
+	
 
+	
+	
 }

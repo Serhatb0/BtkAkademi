@@ -3,6 +3,7 @@ package com.btkAkademi.rentACar.business.abstracts;
 import java.util.List;
 
 import com.btkAkademi.rentACar.business.dtos.CarListDto;
+import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.requests.carRequest.CreateCarRequest;
 import com.btkAkademi.rentACar.business.requests.carRequest.UpdateCarRequest;
 
@@ -16,4 +17,6 @@ public interface CarService {
 	Result add(CreateCarRequest createCarRequest);
 
 	Result update(UpdateCarRequest updateCarRequest);
+
+	DataResult<List<CarListDto>> getAllRentalPage(int pageNo, int pageSize);
 }

@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -59,8 +58,7 @@ public class Car {
 	private List<CarDamage> carDamages;
 	
 
-	@OneToMany(mappedBy = "car")
-	private List<City> cities;
+	
 	
 	
 }

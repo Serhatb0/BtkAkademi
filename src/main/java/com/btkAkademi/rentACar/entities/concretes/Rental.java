@@ -1,6 +1,7 @@
 package com.btkAkademi.rentACar.entities.concretes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -33,14 +34,18 @@ public class Rental {
 	private int rentedKilometer;
 	@Column(name = "returned_Kilometer")
 	private int returnedKilometer;
-	@Column(name = "city_taken")
-	private String cityTaken;
-	@Column(name = "given_city")
-	private String givenCity;
-	
-	
+
 	@Column(name = "rent_date")
 	private LocalDate rentDate;
+	
+	@ManyToOne
+	@JoinColumn(name="pick_up_city_id")
+	private City pickUpCity;
+	
+	@ManyToOne
+	@JoinColumn(name="return_city_id")
+	private City returnCity;
+
 
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
@@ -49,6 +54,7 @@ public class Rental {
 	@JoinColumn(name = "car_id")
 	private Car car;
 	
-	
+	@OneToMany(mappedBy = "rental")
+	private List<AdditionalServices> addtionalServices;
 
 }

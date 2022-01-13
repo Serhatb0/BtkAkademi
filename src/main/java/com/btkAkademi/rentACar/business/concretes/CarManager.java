@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CarService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.dtos.CarListDto;
+
 import com.btkAkademi.rentACar.business.requests.carRequest.CreateCarRequest;
 import com.btkAkademi.rentACar.business.requests.carRequest.UpdateCarRequest;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
@@ -52,15 +56,24 @@ public class CarManager implements CarService {
 	public Result update(UpdateCarRequest updateCarRequest) {
 
 		Car car = this.carDao.findById(updateCarRequest.getId());
-		if(car == null) {
+		if (car == null) {
 			return new ErrorResult(Messages.carIsNotFound);
 		}
-		
-		
+
 		car = modelMapperService.forRequest().map(updateCarRequest, Car.class);
 		this.carDao.save(car);
 		return new SuccessResult(Messages.carUpdated);
 
+	}
+
+	@Override
+	public DataResult<List<CarListDto>> getAllRentalPage(int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+
+		Page<Car> rentalList = this.carDao.findByRentals_IdIsNullOrRentals_returnDateIsNotNull(pageable);
+		List<CarListDto> response = rentalList.stream()
+				.map(car -> modelMapperService.forDto().map(car, CarListDto.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<CarListDto>>(response);
 	}
 
 }

@@ -1,8 +1,13 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
@@ -11,6 +16,7 @@ import com.btkAkademi.rentACar.business.abstracts.CustomerService;
 
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
+import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.requests.rentalRequest.CreateRentalRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
@@ -20,10 +26,7 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.RentalDao;
-import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
-
 import com.btkAkademi.rentACar.entities.concretes.Customer;
-
 import com.btkAkademi.rentACar.entities.concretes.Rental;
 
 @Service
@@ -46,9 +49,8 @@ public class RentalManager implements RentalService {
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
 
-		Result result = BusinessRules.run(
-				checkIfKilometer(createRentalRequest.getRentedKilometer(), createRentalRequest.getReturnedKilometer()),
-				checkIfCustomerExist(createRentalRequest.getCustomerId()));
+		Result result = BusinessRules.run(checkIfCustomerExist(createRentalRequest.getCustomerId()),
+				checkIfCarMaintenance(createRentalRequest.getCarId()));
 
 		if (result != null) {
 			return result;
@@ -83,19 +85,22 @@ public class RentalManager implements RentalService {
 		}
 		return new SuccessResult();
 	}
-	
-	// Reaftor
-	private Result checkIfCarMaintenance(int id) {
-		DataResult<CarMaintenance> carMaintenance = this.carMaintenanceService.findByIdAndDateOfArrivalIsNotNull(id);
-		if (carMaintenance.getData() == null) {
+
+	private Result checkIfCarMaintenance(int carId) {
+		if (carMaintenanceService.findByCarIdAndDateOfArrivalIsNull(carId)) {
 			return new ErrorResult(Messages.carInMaintenance);
 		}
 		return new SuccessResult();
 	}
 
 	@Override
-	public DataResult<Rental> findByIdAndReturnDateIsNotNull(int id) {
-		return new SuccessDataResult<Rental>(this.rentalDao.findByCarIdAndReturnDateIsNotNull(id));
+	public boolean findByCarIdAndReturnDateIsNotNull(int carId) {
+		if (this.rentalDao.findByCarIdAndReturnDateIsNotNull(carId) != null) {
+			return false;
+		} else
+			return true;
 	}
+
+	
 
 }

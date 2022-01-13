@@ -6,6 +6,7 @@ import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
 
 public interface CarMaintenanceDao extends JpaRepository<CarMaintenance, Integer> {
 	
-	CarMaintenance  findByIdAndDateOfArrivalIsNotNull(int id);
+	
+	CarMaintenance findByCarIdAndDateOfArrivalIsNull(int carId);
 
 }

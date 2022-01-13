@@ -3,8 +3,8 @@ package com.btkAkademi.rentACar.business.concretes;
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CustomerService;
-import com.btkAkademi.rentACar.business.dtos.CustomerDao;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
+import com.btkAkademi.rentACar.dataAccess.abstracts.CustomerDao;
 import com.btkAkademi.rentACar.entities.concretes.Customer;
 
 @Service

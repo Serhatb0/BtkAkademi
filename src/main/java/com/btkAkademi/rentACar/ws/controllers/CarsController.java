@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.btkAkademi.rentACar.business.abstracts.CarService;
 
 import com.btkAkademi.rentACar.business.dtos.CarListDto;
-
+import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.requests.carRequest.CreateCarRequest;
 import com.btkAkademi.rentACar.business.requests.carRequest.UpdateCarRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
@@ -45,5 +46,11 @@ public class CarsController {
 	public Result add(@RequestBody @Valid UpdateCarRequest updateCarRequest) {
 		return this.carService.update(updateCarRequest);
 	}
+	
+	@GetMapping("getallrentalpage")
+	public DataResult<List<CarListDto>> getAllRentalPage(@RequestParam(value = "pageNo",defaultValue = "1") int pageNo,@RequestParam(value = "pageSize",defaultValue = "10")int pageSize) {
+		return this.carService.getAllRentalPage(pageNo,pageSize);
+	}
+
 
 }
