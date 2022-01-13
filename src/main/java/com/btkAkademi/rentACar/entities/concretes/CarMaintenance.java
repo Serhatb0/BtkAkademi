@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,15 +30,13 @@ public class CarMaintenance {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
-	@Column(name = "given_institution")
-	private String givenInstitution;
+
 	@Column(name = "date_of_care")
 	private LocalDate dateOfCare;
 	@Column(name = "date_of_arrival")
 	private LocalDate dateOfArrival;
 
-	
+
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;

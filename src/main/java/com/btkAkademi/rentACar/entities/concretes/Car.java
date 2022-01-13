@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,9 +47,11 @@ public class Car {
 	@JoinColumn(name = "color_id")
 	private Color color;
 	
+	
 	@OneToMany(mappedBy = "car")
 	private List<Rental> rentals;
-
+	
+	
 	@OneToMany(mappedBy = "car")
 	private List<CarMaintenance> carMaintenances;
 	

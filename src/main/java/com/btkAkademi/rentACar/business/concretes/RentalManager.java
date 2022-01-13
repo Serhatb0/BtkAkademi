@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
-import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
-import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
+
+import com.btkAkademi.rentACar.business.abstracts.CustomerService;
+
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.requests.rentalRequest.CreateRentalRequest;
@@ -19,47 +20,36 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.RentalDao;
 import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
-import com.btkAkademi.rentACar.entities.concretes.CorporateCustomer;
-import com.btkAkademi.rentACar.entities.concretes.IndividualCustomer;
+
+import com.btkAkademi.rentACar.entities.concretes.Customer;
+
 import com.btkAkademi.rentACar.entities.concretes.Rental;
 
 @Service
 public class RentalManager implements RentalService {
 	private RentalDao rentalDao;
 	private ModelMapperService modelMapperService;
-	private CorporateCustomerService corporateCustomerService;
-	private IndividualCustomerService individualCustomerService;
 	private CarMaintenanceService carMaintenanceService;
+	private CustomerService customerService;
 
 	@Autowired
 	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService,
-			CorporateCustomerService corporateCustomerService, IndividualCustomerService individualCustomerService,
-			CarMaintenanceService carMaintenanceService) {
+			CarMaintenanceService carMaintenanceService, CustomerService customerService) {
 		super();
 		this.rentalDao = rentalDao;
 		this.modelMapperService = modelMapperService;
-		this.corporateCustomerService = corporateCustomerService;
-		this.individualCustomerService = individualCustomerService;
 		this.carMaintenanceService = carMaintenanceService;
+		this.customerService = customerService;
 	}
 
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
 
-		DataResult<CorporateCustomer> corporateCustomer = this.corporateCustomerService
-				.findById(createRentalRequest.getCustomerId());
-
-		DataResult<IndividualCustomer> individualCustomerd = this.individualCustomerService
-				.findById(createRentalRequest.getCustomerId());
-		if (corporateCustomer.getData() == null) {
-			return new ErrorResult(Messages.customerIsNotFound);
-		}
-
-	
 		Result result = BusinessRules.run(
 				checkIfKilometer(createRentalRequest.getRentedKilometer(), createRentalRequest.getReturnedKilometer()),
 				checkIfDate(createRentalRequest.getRentDate(), createRentalRequest.getReturnDate()),
-				checkIfCarMaintenance(createRentalRequest.getCarId()));
+				checkIfCarMaintenance(createRentalRequest.getCarId()),
+				checkIfCustomerExist(createRentalRequest.getCustomerId()));
 
 		if (result != null) {
 			return result;
@@ -68,6 +58,15 @@ public class RentalManager implements RentalService {
 
 		this.rentalDao.save(rental);
 		return new SuccessResult(Messages.rentalAdded);
+	}
+
+	private Result checkIfCustomerExist(int customerId) {
+		DataResult<Customer> customer = this.customerService.findById(customerId);
+		if (customer.getData() == null) {
+			return new ErrorResult(Messages.customerIsNotFound);
+		}
+
+		return new SuccessResult();
 	}
 
 	private Result checkIfKilometer(int rentedKilometer, int returnedKilometer) {
@@ -80,7 +79,7 @@ public class RentalManager implements RentalService {
 
 	private Result checkIfDate(LocalDate rentDate, LocalDate returnDate) {
 
-		if (rentDate.getDayOfMonth() >= returnDate.getDayOfMonth()) {
+		if (!returnDate.isAfter(rentDate)) {
 			return new ErrorResult(Messages.rentalDateError);
 		}
 		return new SuccessResult();
@@ -89,7 +88,7 @@ public class RentalManager implements RentalService {
 	private Result checkIfCarMaintenance(int id) {
 		DataResult<CarMaintenance> carMaintenance = this.carMaintenanceService.findByIdAndDateOfArrivalIsNotNull(id);
 		if (carMaintenance.getData() == null) {
-			return new ErrorResult("Araba Bakımda");
+			return new ErrorResult(Messages.carInMaintenance);
 		}
 		return new SuccessResult();
 	}

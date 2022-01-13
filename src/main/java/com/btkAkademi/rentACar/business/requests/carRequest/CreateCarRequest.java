@@ -18,5 +18,9 @@ public class CreateCarRequest {
 	private int findexScore;
 
 	private int kilometer;
+	
+	private int colorId;
+	
+	private int brandId;
 
 }
