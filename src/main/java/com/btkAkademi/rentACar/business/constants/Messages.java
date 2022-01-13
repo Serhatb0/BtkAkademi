@@ -26,4 +26,6 @@ public class Messages {
 	public static final String ageError = "age.error";
 	public static final String carMaintenanceAdded= "car.maintenance.added";
 	public static final String carInMaintenance = "car.in.maintenance";
+	public static String carDamageAdded ="car.damage.added";
+	public static String carInRental = "car.in.rental";
 }

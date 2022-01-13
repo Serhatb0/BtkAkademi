@@ -17,6 +17,7 @@ import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
+import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.RentalDao;
 import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
@@ -47,8 +48,6 @@ public class RentalManager implements RentalService {
 
 		Result result = BusinessRules.run(
 				checkIfKilometer(createRentalRequest.getRentedKilometer(), createRentalRequest.getReturnedKilometer()),
-				checkIfDate(createRentalRequest.getRentDate(), createRentalRequest.getReturnDate()),
-				checkIfCarMaintenance(createRentalRequest.getCarId()),
 				checkIfCustomerExist(createRentalRequest.getCustomerId()));
 
 		if (result != null) {
@@ -84,13 +83,19 @@ public class RentalManager implements RentalService {
 		}
 		return new SuccessResult();
 	}
-
+	
+	// Reaftor
 	private Result checkIfCarMaintenance(int id) {
 		DataResult<CarMaintenance> carMaintenance = this.carMaintenanceService.findByIdAndDateOfArrivalIsNotNull(id);
 		if (carMaintenance.getData() == null) {
 			return new ErrorResult(Messages.carInMaintenance);
 		}
 		return new SuccessResult();
+	}
+
+	@Override
+	public DataResult<Rental> findByIdAndReturnDateIsNotNull(int id) {
+		return new SuccessDataResult<Rental>(this.rentalDao.findByCarIdAndReturnDateIsNotNull(id));
 	}
 
 }
