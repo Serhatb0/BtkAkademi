@@ -13,7 +13,5 @@ public class CreateCarMaintenanceRequest {
 
 	private LocalDate dateOfCare;
 
-	private LocalDate dateOfArrival;
-
 	private int carId;
 }
