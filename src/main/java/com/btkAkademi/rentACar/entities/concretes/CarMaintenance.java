@@ -1,5 +1,6 @@
 package com.btkAkademi.rentACar.entities.concretes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -20,36 +21,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name ="cars")
-public class Car {
-	
+@Table(name = "car_maintenances")
+public class CarMaintenance {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name ="id")
+	@Column(name = "id")
 	private int id;
-	@Column(name ="daily_price")
-	private double dailyPrice;
-	@Column(name ="model_year")
-	private int modelYear;
-	@Column(name ="description")
-	private String description;
-	@Column(name ="findex_score")
-	private int findexScore;
-	@Column(name ="kilometer")
-	private int kilometer;
 	
-	@ManyToOne
-	@JoinColumn(name = "brand_id")
-	private Brand brand;
-	@ManyToOne
-	@JoinColumn(name = "color_id")
-	private Color color;
-	
-	@OneToMany(mappedBy = "car")
-	private List<Rental> rentals;
+	@Column(name = "given_institution")
+	private String givenInstitution;
+	@Column(name = "date_of_care")
+	private LocalDate dateOfCare;
+	@Column(name = "date_of_arrival")
+	private LocalDate dateOfArrival;
 
-	@OneToMany(mappedBy = "car")
-	private List<CarMaintenance> carMaintenances;
+
+	@Column(name = "status")
+	private Boolean status;
 	
-	
+	@ManyToOne
+	@JoinColumn(name = "car_id")
+	private Car car;
+
 }

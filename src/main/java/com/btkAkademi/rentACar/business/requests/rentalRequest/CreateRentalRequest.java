@@ -22,4 +22,8 @@ public class CreateRentalRequest {
 	private LocalDate rentDate;
 	
 	private int customerId;
+	
+	private int carId;
+	
+	
 }

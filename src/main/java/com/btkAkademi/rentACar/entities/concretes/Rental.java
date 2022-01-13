@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 
 import javax.persistence.Table;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -27,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class Rental {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
 	@Column(name = "return_date")
 	private LocalDate returnDate;
@@ -35,13 +33,15 @@ public class Rental {
 	private int rentedKilometer;
 	@Column(name = "returned_Kilometer")
 	private int returnedKilometer;
-	
-	@Column(name ="rent_date")
+
+	@Column(name = "rent_date")
 	private LocalDate rentDate;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
-	
-	
+	@ManyToOne
+	@JoinColumn(name = "car_id")
+	private Car car;
+
 }

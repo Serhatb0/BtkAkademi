@@ -24,4 +24,5 @@ public class Messages {
 	public static final String colorIsNotFound = "color.is.not.found";
 	public static final String individualCustomerEmailExists = "individual.customer.email.exists";
 	public static final String ageError = "age.error";
+	public static String carMaintenanceAdded= "car.maintenance.added";
 }
