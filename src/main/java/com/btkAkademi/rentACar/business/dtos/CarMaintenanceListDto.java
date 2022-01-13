@@ -18,5 +18,4 @@ public class CarMaintenanceListDto {
 
 	private LocalDate dateOfArrival;
 
-	private Boolean status;
 }

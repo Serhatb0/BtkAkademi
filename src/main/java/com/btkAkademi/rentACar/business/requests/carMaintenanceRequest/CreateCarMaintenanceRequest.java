@@ -17,7 +17,6 @@ public class CreateCarMaintenanceRequest {
 
 	private LocalDate dateOfArrival;
 
-	private Boolean status;
-	
+
 	private int carId;
 }

@@ -1,5 +1,8 @@
 package com.btkAkademi.rentACar.business.concretes;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +39,7 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 	public Result add(CreateIndividualCustomer createIndividualCustomer) {
 
 		Result result = BusinessRules.run(checkIfEmailExists(createIndividualCustomer.getEmail()),
-				checkIfAgeControl(createIndividualCustomer.getBirthDate().getYear()));
+				checkIfAgeControl(createIndividualCustomer.getBirthDate()));
 
 		if (result != null) {
 			return result;
@@ -56,9 +59,9 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 		return new SuccessResult();
 	}
 
-	private Result checkIfAgeControl(int age) {
-
-		if (age > 2003) {
+	private Result checkIfAgeControl(LocalDate birthDate) {
+		int age = Period.between(birthDate, LocalDate.now()).getYears();
+		if (age<18) {
 			return new ErrorResult(Messages.ageError);
 		}
 		return new SuccessResult();

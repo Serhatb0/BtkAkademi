@@ -46,20 +46,20 @@ public class RentalManager implements RentalService {
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
 
-//		DataResult<CorporateCustomer> corporateCustomer = this.corporateCustomerService
-//				.findById(createRentalRequest.getCustomerId());
-//
-//		DataResult<IndividualCustomer> individualCustomerd = this.individualCustomerService
-//				.findById(createRentalRequest.getCustomerId());
-//		if (corporateCustomer.getData() == null) {
-//			return new ErrorResult(Messages.customerIsNotFound);
-//		}
+		DataResult<CorporateCustomer> corporateCustomer = this.corporateCustomerService
+				.findById(createRentalRequest.getCustomerId());
+
+		DataResult<IndividualCustomer> individualCustomerd = this.individualCustomerService
+				.findById(createRentalRequest.getCustomerId());
+		if (corporateCustomer.getData() == null) {
+			return new ErrorResult(Messages.customerIsNotFound);
+		}
 
 	
 		Result result = BusinessRules.run(
 				checkIfKilometer(createRentalRequest.getRentedKilometer(), createRentalRequest.getReturnedKilometer()),
 				checkIfDate(createRentalRequest.getRentDate(), createRentalRequest.getReturnDate()),
-				checkCarMaintenance(createRentalRequest.getCarId()));
+				checkIfCarMaintenance(createRentalRequest.getCarId()));
 
 		if (result != null) {
 			return result;
@@ -86,8 +86,8 @@ public class RentalManager implements RentalService {
 		return new SuccessResult();
 	}
 
-	private Result checkCarMaintenance(int id) {
-		DataResult<CarMaintenance> carMaintenance = this.carMaintenanceService.findById(id);
+	private Result checkIfCarMaintenance(int id) {
+		DataResult<CarMaintenance> carMaintenance = this.carMaintenanceService.findByIdAndDateOfArrivalIsNotNull(id);
 		if (carMaintenance.getData() == null) {
 			return new ErrorResult("Araba Bakımda");
 		}

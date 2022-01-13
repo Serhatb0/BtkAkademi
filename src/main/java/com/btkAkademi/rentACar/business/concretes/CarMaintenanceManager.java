@@ -38,7 +38,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		List<CarMaintenance> carMaintenanceList = this.carMaintenanceDao.findAll();
 		List<CarMaintenanceListDto> response = carMaintenanceList.stream()
 				.map(brand -> modelMapperService.forDto().map(brand, CarMaintenanceListDto.class))
-				.filter(brand -> brand.getStatus() == false).collect(Collectors.toList());
+				.collect(Collectors.toList());
 		return new SuccessDataResult<List<CarMaintenanceListDto>>(response);
 
 	}
@@ -53,7 +53,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	}
 
 	@Override
-	public DataResult<CarMaintenance> findById(int id) {
+	public DataResult<CarMaintenance> findByIdAndDateOfArrivalIsNotNull(int id) {
 	
 		return new SuccessDataResult<CarMaintenance>(this.carMaintenanceDao.findByIdAndDateOfArrivalIsNotNull(id));
 	}

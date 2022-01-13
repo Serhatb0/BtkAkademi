@@ -36,9 +36,6 @@ public class CarMaintenance {
 	@Column(name = "date_of_arrival")
 	private LocalDate dateOfArrival;
 
-
-	@Column(name = "status")
-	private Boolean status;
 	
 	@ManyToOne
 	@JoinColumn(name = "car_id")
