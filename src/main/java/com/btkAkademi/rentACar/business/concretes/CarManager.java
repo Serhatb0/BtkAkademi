@@ -76,4 +76,9 @@ public class CarManager implements CarService {
 		return new SuccessDataResult<List<CarListDto>>(response);
 	}
 
+	@Override
+	public DataResult<Car> findByRentals_Id(int id) {
+		return new SuccessDataResult<Car>(this.carDao.findByRentals_Id(id));
+	}
+
 }

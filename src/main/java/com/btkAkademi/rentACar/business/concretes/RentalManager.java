@@ -1,13 +1,9 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CarMaintenanceService;
@@ -16,7 +12,7 @@ import com.btkAkademi.rentACar.business.abstracts.CustomerService;
 
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
-import com.btkAkademi.rentACar.business.dtos.RentalListDto;
+
 import com.btkAkademi.rentACar.business.requests.rentalRequest.CreateRentalRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
@@ -101,6 +97,10 @@ public class RentalManager implements RentalService {
 			return true;
 	}
 
-	
+	@Override
+	public DataResult<Rental> findById(int id) {
+		return new SuccessDataResult<Rental>(this.rentalDao.findById(id));
+	}
+
 
 }

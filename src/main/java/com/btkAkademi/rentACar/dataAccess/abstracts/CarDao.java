@@ -14,5 +14,7 @@ public interface CarDao extends JpaRepository<Car, Integer> {
 	
 	
 	Page<Car> findByRentals_IdIsNullOrRentals_returnDateIsNotNull(Pageable pageable);
+	
+	Car findByRentals_Id(int id);
 
 }

@@ -29,4 +29,5 @@ public class Messages {
 	public static final String carDamageAdded ="car.damage.added";
 	public static final String carInRental = "car.in.rental";
 	public static final String additionalAdded = "additional.added";
+	public static String moneyPaid = "money.paid";
 }

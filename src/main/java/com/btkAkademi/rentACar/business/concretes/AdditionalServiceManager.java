@@ -7,7 +7,9 @@ import com.btkAkademi.rentACar.business.abstracts.AdditionalServicesService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.requests.AdditionalServicesRequest.CreateAdditionalServiceRequest;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
+import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
+import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.AdditionalServicesDao;
 import com.btkAkademi.rentACar.entities.concretes.AdditionalServices;
@@ -36,6 +38,13 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 		AdditionalServices additionalService = this.modelMapperService.forRequest().map(createAdditionalServicesRequest, AdditionalServices.class);
 		this.additionalServicesDao.save(additionalService);
 		return new SuccessResult(Messages.additionalAdded);
+	}
+
+
+
+	@Override
+	public DataResult<AdditionalServices> findByRental_Id(int id) {
+		return new SuccessDataResult<AdditionalServices>(this.additionalServicesDao.findByRental_Id(id));
 	}
 	
 		
