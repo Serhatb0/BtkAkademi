@@ -1,5 +1,7 @@
 package com.btkAkademi.rentACar.business.concretes;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,8 +45,8 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 
 
 	@Override
-	public DataResult<AdditionalServices> findByRental_Id(int id) {
-		return new SuccessDataResult<AdditionalServices>(this.additionalServicesDao.findByRental_Id(id));
+	public List<AdditionalServices> findByRental_Id(int id) {
+		return  this.additionalServicesDao.findByRental_Id(id);
 	}
 	
 		

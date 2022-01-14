@@ -1,5 +1,7 @@
 package com.btkAkademi.rentACar.business.concretes;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,6 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
 import com.btkAkademi.rentACar.entities.concretes.AdditionalServices;
-import com.btkAkademi.rentACar.entities.concretes.Brand;
 import com.btkAkademi.rentACar.entities.concretes.Car;
 import com.btkAkademi.rentACar.entities.concretes.Payment;
 import com.btkAkademi.rentACar.entities.concretes.Rental;
@@ -53,10 +54,18 @@ public class PaymentManager implements PaymentService {
 	private int priceCalculation(int rentalId) {
 		DataResult<Car> car = this.carService.findByRentals_Id(rentalId);
 		DataResult<Rental> rental = this.rentalService.findById(rentalId);
-		DataResult<AdditionalServices> additionalService = this.additionalServicesService.findByRental_Id(rentalId);
-		int priceAdditional = additionalService.getData().getPrice();
+		List<AdditionalServices> additionalServices = this.additionalServicesService.findByRental_Id(rentalId);
+		int total = 0;
+		for (AdditionalServices additional : additionalServices) {
+			total += additional.getPrice();
+
+		}
+//		Period diff = Period.between(rental.getData().getRentDate(),rental.getData().getReturnDate());
 		int rentDay = rental.getData().getReturnDate().getDayOfMonth() - rental.getData().getRentDate().getDayOfMonth();
-		return (int) (priceAdditional + rentDay * car.getData().getDailyPrice());
+		if(rentDay == 0) {
+			rentDay=1;
+		}
+		return (int) (total + rentDay * car.getData().getDailyPrice());
 
 	}
 
