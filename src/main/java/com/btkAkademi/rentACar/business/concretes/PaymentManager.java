@@ -11,8 +11,10 @@ import com.btkAkademi.rentACar.business.abstracts.PaymentService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.requests.paymentRequest.CreatePaymentRequest;
+import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
@@ -43,6 +45,11 @@ public class PaymentManager implements PaymentService {
 
 	@Override
 	public Result add(CreatePaymentRequest createPaymentRequest) {
+		Result result = BusinessRules.run(checkIfPayment(createPaymentRequest.getRentalId()));
+		
+		if(result != null) {
+			return result;
+		}
 
 		Payment payment = mapperService.forRequest().map(createPaymentRequest, Payment.class);
 		payment.setTotalAmount(priceCalculation(createPaymentRequest.getRentalId()));
@@ -60,13 +67,20 @@ public class PaymentManager implements PaymentService {
 			total += additional.getPrice();
 
 		}
-//		Period diff = Period.between(rental.getData().getRentDate(),rental.getData().getReturnDate());
+//		Period rentDay = Period.between(rental.getData().getRentDate(),rental.getData().getReturnDate());
 		int rentDay = rental.getData().getReturnDate().getDayOfMonth() - rental.getData().getRentDate().getDayOfMonth();
 		if(rentDay == 0) {
 			rentDay=1;
 		}
 		return (int) (total + rentDay * car.getData().getDailyPrice());
 
+	}
+	
+	private Result checkIfPayment(int rentalId) {
+		if(this.paymentDao.findByRental_Id(rentalId) != null) {
+			return new ErrorResult(Messages.paymentCompleted);
+		}
+		return new SuccessResult();
 	}
 
 }

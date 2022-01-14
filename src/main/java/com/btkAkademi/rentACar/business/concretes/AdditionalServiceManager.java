@@ -9,21 +9,19 @@ import com.btkAkademi.rentACar.business.abstracts.AdditionalServicesService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.requests.AdditionalServicesRequest.CreateAdditionalServiceRequest;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
-import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+
 import com.btkAkademi.rentACar.core.utilities.results.Result;
-import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
+
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.AdditionalServicesDao;
 import com.btkAkademi.rentACar.entities.concretes.AdditionalServices;
 
-
 @Service
 public class AdditionalServiceManager implements AdditionalServicesService {
-	
+
 	private AdditionalServicesDao additionalServicesDao;
 	private ModelMapperService modelMapperService;
 
-	
 	@Autowired
 	public AdditionalServiceManager(AdditionalServicesDao additionalServicesDao,
 			ModelMapperService modelMapperService) {
@@ -32,24 +30,18 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 		this.modelMapperService = modelMapperService;
 	}
 
-
-
 	@Override
 	public Result add(CreateAdditionalServiceRequest createAdditionalServicesRequest) {
 
-		AdditionalServices additionalService = this.modelMapperService.forRequest().map(createAdditionalServicesRequest, AdditionalServices.class);
+		AdditionalServices additionalService = this.modelMapperService.forRequest().map(createAdditionalServicesRequest,
+				AdditionalServices.class);
 		this.additionalServicesDao.save(additionalService);
 		return new SuccessResult(Messages.additionalAdded);
 	}
 
-
-
 	@Override
 	public List<AdditionalServices> findByRental_Id(int id) {
-		return  this.additionalServicesDao.findByRental_Id(id);
+		return this.additionalServicesDao.findByRental_Id(id);
 	}
-	
-		
-	
 
 }
