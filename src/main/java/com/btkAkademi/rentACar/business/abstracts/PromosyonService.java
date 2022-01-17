@@ -1,5 +1,6 @@
 package com.btkAkademi.rentACar.business.abstracts;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.btkAkademi.rentACar.business.dtos.PromosyonListDto;
@@ -15,6 +16,8 @@ public interface PromosyonService {
 	DataResult<List<PromosyonListDto>> getAll();
 
 	Result add(CreatePromosyonRequest createPromosyonRequest);
+	
+	boolean promosyonCodeTime(LocalDate promosyonStart,LocalDate promosyonEnd);
 
 	boolean exsistById(int id);
 

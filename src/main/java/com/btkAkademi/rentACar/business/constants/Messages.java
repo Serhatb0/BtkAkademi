@@ -56,5 +56,9 @@ public class Messages {
 	public static final String paymentDeleted = "payment.deleted";
 	public static final String invoiceAdded = "invoice.added";
 	public static final String promosyonAdded ="promosyon.added";
+	public static final String expiredTime = "expired.time";
+	public static final String promosyonCodeIsNotFound = "promosyon.code.is.not.found";
+	public static final String ageNotEnough = "age.not.enough";
+	public static final String findexScoreNotEnough = "findex.score.not.enough";
 
 }

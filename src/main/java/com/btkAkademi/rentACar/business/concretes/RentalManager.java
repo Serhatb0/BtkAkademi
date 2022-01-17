@@ -131,7 +131,7 @@ public class RentalManager implements RentalService {
 		if (IndividualCustomerAge >= minimumAge) {
 			return new SuccessResult();
 		}
-		return new ErrorResult("Yaş Yetersiz ");
+		return new ErrorResult(Messages.ageNotEnough);
 
 	}
 
@@ -141,7 +141,7 @@ public class RentalManager implements RentalService {
 		if (this.iFindexService.IndividalFindexScore(tc) > findexScore) {
 			return new SuccessResult();
 		}
-		return new ErrorResult("FindexScore Yetersiz");
+		return new ErrorResult(Messages.findexScoreNotEnough);
 
 	}
 
@@ -149,7 +149,7 @@ public class RentalManager implements RentalService {
 		if (this.iFindexService.CorporateFindexScroe(taxNumber) > findexScore) {
 			return new SuccessResult();
 		}
-		return new ErrorResult("FindexScore Yetersiz");
+		return new ErrorResult(Messages.findexScoreNotEnough);
 
 	}
 

@@ -1,24 +1,23 @@
 package com.btkAkademi.rentACar.business.concretes;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.AccountService;
 import com.btkAkademi.rentACar.business.abstracts.AdditionalServicesService;
 import com.btkAkademi.rentACar.business.abstracts.CarService;
 import com.btkAkademi.rentACar.business.abstracts.IPosService;
-import com.btkAkademi.rentACar.business.abstracts.InvoiceService;
+
 import com.btkAkademi.rentACar.business.abstracts.PaymentService;
 import com.btkAkademi.rentACar.business.abstracts.PromosyonService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
-import com.btkAkademi.rentACar.business.dtos.InvoiceDteailListDto;
-
 import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
 import com.btkAkademi.rentACar.business.requests.accountRequest.CreateAccountRequest;
 import com.btkAkademi.rentACar.business.requests.paymentRequest.CreatePaymentRequest;
@@ -31,9 +30,7 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
-import com.btkAkademi.rentACar.entities.concretes.AdditionalServices;
 import com.btkAkademi.rentACar.entities.concretes.Car;
-import com.btkAkademi.rentACar.entities.concretes.Invoice;
 import com.btkAkademi.rentACar.entities.concretes.Payment;
 import com.btkAkademi.rentACar.entities.concretes.Promosyon;
 import com.btkAkademi.rentACar.entities.concretes.Rental;
@@ -48,14 +45,12 @@ public class PaymentManager implements PaymentService {
 	private CarService carService;
 	private AccountService accountService;
 	private IPosService posService;
-	private InvoiceService invoiceService;
 	private PromosyonService promosyonService;
 
 	@Autowired
 	public PaymentManager(PaymentDao paymentDao, ModelMapperService mapperService,
 			AdditionalServicesService additionalServicesService, RentalService rentalService, CarService carService,
-			AccountService accountService, IPosService posService, InvoiceService invoiceService,
-			PromosyonService promosyonService) {
+			AccountService accountService, IPosService posService, PromosyonService promosyonService) {
 		super();
 		this.paymentDao = paymentDao;
 		this.mapperService = mapperService;
@@ -64,14 +59,16 @@ public class PaymentManager implements PaymentService {
 		this.carService = carService;
 		this.accountService = accountService;
 		this.posService = posService;
-		this.invoiceService = invoiceService;
+
 		this.promosyonService = promosyonService;
 	}
 
 	@Override
 	public Result add(CreatePaymentRequest createPaymentRequest) {
 		Result result = BusinessRules.run(checkIfPayment(createPaymentRequest.getRentalId()),
-				checkIfCreditCardValid(createPaymentRequest.getAccount()));
+				checkIfCreditCardValid(createPaymentRequest.getAccount()),
+				checkIfPomosyonExsist(createPaymentRequest.getPromosyonId()),
+				checkIfPromosyonCodeExpire(createPaymentRequest.getPromosyonId()));
 
 		if (result != null) {
 			return result;
@@ -82,54 +79,39 @@ public class PaymentManager implements PaymentService {
 		}
 
 		Payment payment = mapperService.forRequest().map(createPaymentRequest, Payment.class);
-		if (checkIfPromosyon(createPaymentRequest.getPromosyonId())) {
-			payment.setTotalAmount(priceCalculation(createPaymentRequest.getRentalId()));
-		}else {
-			payment.setTotalAmount(
-					priceCalculationPromosyon(createPaymentRequest.getRentalId(), createPaymentRequest.getPromosyonId()));
-		
-		}
-		
-	
+		if (isThereCodeOrNot(createPaymentRequest.getPromosyonId())) {
+			payment.setTotalAmount(dailyTotalPriceCalculation(createPaymentRequest.getRentalId()));
+		} else {
+			payment.setTotalAmount(dailyTotalPriceCalculationPromosyon(createPaymentRequest.getRentalId(),
+					createPaymentRequest.getPromosyonId()));
 
+		}
 
 		this.paymentDao.save(payment);
 		return new SuccessResult(Messages.paymentCompleted);
 
 	}
 
-
-
 	private int additionalServiceCalculation(int rentalId) {
-		List<AdditionalServiceListDto> additionalServices = this.additionalServicesService.findByRental_Id(rentalId).getData();
+		List<AdditionalServiceListDto> additionalServices = this.additionalServicesService.findByRental_Id(rentalId)
+				.getData();
 		int total = 0;
 		for (AdditionalServiceListDto additional : additionalServices) {
 			total += additional.getPrice();
 
 		}
 		return total;
-		
+
 	}
 
-	private int priceCalculationPromosyon(int rentalId, int promosyonId) {
+	private int dailyTotalPriceCalculationPromosyon(int rentalId, int promosyonId) {
 
 		DataResult<Promosyon> promosyon = this.promosyonService.findById(promosyonId);
-		DataResult<Car> car = this.carService.findByRentals_Id(rentalId);
-		DataResult<Rental> rental = this.rentalService.findById(rentalId);
-		int total = additionalServiceCalculation(rentalId);
-
-		int rentDay = rental.getData().getReturnDate().getDayOfMonth() - rental.getData().getRentDate().getDayOfMonth();
-		if (rentDay == 0) {
-			rentDay = 1;
-		}
-
-		return (int) (total + rentDay * car.getData().getDailyPrice())
-				- (int) (total + rentDay * car.getData().getDailyPrice()) * (promosyon.getData().getDiscountRate())
-						/ 100;
-
+		int total = dailyTotalPriceCalculation(rentalId);
+		return total - (total) * (promosyon.getData().getDiscountRate()) / 100;
 	}
 
-	private int priceCalculation(int rentalId) {
+	private int dailyTotalPriceCalculation(int rentalId) {
 		DataResult<Car> car = this.carService.findByRentals_Id(rentalId);
 		DataResult<Rental> rental = this.rentalService.findById(rentalId);
 		int total = additionalServiceCalculation(rentalId);
@@ -143,12 +125,35 @@ public class PaymentManager implements PaymentService {
 
 	}
 
-	private boolean checkIfPromosyon(int promosyonId) {
-		if (this.promosyonService.exsistById(promosyonId)) {
-			return false;
+	private boolean isThereCodeOrNot(int promosyonId) {
+		if (promosyonId == 0) {
+			return true;
 		}
-		return true;
+		return false;
 
+	}
+
+	private Result checkIfPomosyonExsist(int promosyonId) {
+		if (promosyonId != 0) {
+			if (!this.promosyonService.exsistById(promosyonId)) {
+				return new ErrorResult(Messages.promosyonCodeIsNotFound);
+			}
+		}
+		return new SuccessResult();
+
+	}
+
+	private Result checkIfPromosyonCodeExpire(int promosyonId) {
+		if(checkIfPomosyonExsist(promosyonId).getMessage() == Messages.promosyonCodeIsNotFound|| promosyonId == 0 ) {
+			return new SuccessResult();
+		}else {
+			Promosyon promosyon = this.promosyonService.findById(promosyonId).getData();
+			if (this.promosyonService.promosyonCodeTime(promosyon.getPromosyonStart(), promosyon.getPromosyonEnd())) {
+				return new SuccessResult();
+			}
+			return new ErrorResult(Messages.expiredTime);
+		}
+		
 	}
 
 	private Result checkIfPayment(int rentalId) {
