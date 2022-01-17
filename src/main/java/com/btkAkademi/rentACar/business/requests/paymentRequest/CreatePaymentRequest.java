@@ -17,5 +17,6 @@ public class CreatePaymentRequest {
 	private boolean saveCreditStatus;
 	private int rentalId;
 	private CreateAccountRequest account;
+	private int promosyonId;
 
 }

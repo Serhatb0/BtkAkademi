@@ -3,8 +3,6 @@ package com.btkAkademi.rentACar.business.abstracts;
 
 
 import java.util.List;
-
-import com.btkAkademi.rentACar.business.dtos.BrandListDto;
 import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.requests.rentalRequest.CreateRentalRequest;
 import com.btkAkademi.rentACar.business.requests.rentalRequest.UpdateRentalRequest;
@@ -16,7 +14,10 @@ public interface RentalService {
 	
 	DataResult<List<RentalListDto>> getAll();
 
-	Result add(CreateRentalRequest createRentalRequest);
+	Result addIndividualCustomer(CreateRentalRequest createRentalRequest);
+	
+	Result addCorporateCustomer(CreateRentalRequest createRentalRequest);
+
 	
 	Result update(UpdateRentalRequest updateRentalRequest);
 	

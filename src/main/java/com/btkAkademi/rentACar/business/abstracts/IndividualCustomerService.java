@@ -13,4 +13,5 @@ public interface IndividualCustomerService {
 	Result add(CreateIndividualCustomer createIndividualCustomer);
 	
 	DataResult<IndividualCustomer> findById(int id);
+
 }

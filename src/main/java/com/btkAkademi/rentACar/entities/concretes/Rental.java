@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -47,17 +49,26 @@ public class Rental {
 	@JoinColumn(name = "return_city_id")
 	private City returnCity;
 
+	@OneToMany(mappedBy = "rental")
+	private List<Invoice> invoice;
+	
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;
 
 	@OneToMany(mappedBy = "rental")
 	private List<AdditionalServices> addtionalServices;
-
+	
 	@OneToOne(mappedBy = "rental")
 	private Payment payment;
 
 }
+
+
+
+// 

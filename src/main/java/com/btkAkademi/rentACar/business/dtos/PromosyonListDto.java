@@ -2,19 +2,21 @@ package com.btkAkademi.rentACar.business.dtos;
 
 import java.time.LocalDate;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarMaintenanceListDto {
+public class PromosyonListDto {
+	private String promosyonCode;
+
+	private int discountRate;
 	
-
-
-	private LocalDate dateOfCare;
-
-	private LocalDate dateOfArrival;
-
+	private LocalDate promosyonStart;
+	
+	private LocalDate promosyonEnd;
 }

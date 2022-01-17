@@ -44,8 +44,14 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 	}
 
 	@Override
-	public List<AdditionalServices> findByRental_Id(int id) {
-		return this.additionalServicesDao.findByRental_Id(id);
+	public DataResult<List<AdditionalServiceListDto>> findByRental_Id(int rentalId) {
+		List<AdditionalServices> additionalServiceList = this.additionalServicesDao.findByRental_Id(rentalId);
+		List<AdditionalServiceListDto> response = additionalServiceList.stream()
+				.map(additionalService -> modelMapperService.forDto()
+						.map(additionalService, AdditionalServiceListDto.class))
+				.collect(Collectors.toList());
+
+		return new SuccessDataResult<List<AdditionalServiceListDto>>(response);
 	}
 
 	@Override

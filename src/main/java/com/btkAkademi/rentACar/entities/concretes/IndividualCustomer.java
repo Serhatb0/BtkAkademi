@@ -5,6 +5,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+
+import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +29,9 @@ public class IndividualCustomer extends Customer {
 	private String lastName;
 	@Column(name = "birth_date")
 	private LocalDate birthDate;
+	@Column(name = "ıdentity_number")
+	private String ıdentityNumber;
+	
 }
 
 

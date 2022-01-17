@@ -54,5 +54,7 @@ public class Messages {
 	public static final String paymentUpdated = "payment.updated";
 	public static final String paymentIsNotFound = "payment.is.not.found";
 	public static final String paymentDeleted = "payment.deleted";
+	public static final String invoiceAdded = "invoice.added";
+	public static final String promosyonAdded ="promosyon.added";
 
 }

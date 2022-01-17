@@ -20,4 +20,6 @@ public interface CarService {
 	DataResult<List<CarListDto>> getAllRentalPage(int pageNo, int pageSize);
 
 	DataResult<Car> findByRentals_Id(int id);
+	
+	DataResult<Car> findById(int id);
 }

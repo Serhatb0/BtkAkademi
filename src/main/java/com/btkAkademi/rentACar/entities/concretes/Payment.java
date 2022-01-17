@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +35,7 @@ public class Payment {
 
 	@Column(name = "payment_date")
 	private LocalDate paymentDate;
-
+	
 	@OneToOne
 	@JoinColumn(name = "rental_id")
 	private Rental rental;

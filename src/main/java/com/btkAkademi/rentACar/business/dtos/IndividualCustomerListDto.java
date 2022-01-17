@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarMaintenanceListDto {
-	
-
-
-	private LocalDate dateOfCare;
-
-	private LocalDate dateOfArrival;
+public class IndividualCustomerListDto {
+	private int id;
+	private String nationalityId;
+	private String email;
+	private String firstName;
+	private String lastName;
+	private LocalDate birthDate;	
 
 }

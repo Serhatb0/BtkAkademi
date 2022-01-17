@@ -1,4 +1,4 @@
-package com.btkAkademi.rentACar.business.dtos;
+package com.btkAkademi.rentACar.business.requests.ınvoiceRequest;
 
 import java.time.LocalDate;
 
@@ -9,12 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarMaintenanceListDto {
+public class CreateInvoiceRequest {
+	private LocalDate createDate;
+	private int rentalId;
 	
-
-
-	private LocalDate dateOfCare;
-
-	private LocalDate dateOfArrival;
-
 }

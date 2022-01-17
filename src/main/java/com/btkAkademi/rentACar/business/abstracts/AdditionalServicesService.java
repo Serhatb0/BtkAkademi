@@ -20,6 +20,6 @@ public interface AdditionalServicesService {
 
 	Result deleteById(int id);
 
-	List<AdditionalServices> findByRental_Id(int id);
+	DataResult<List<AdditionalServiceListDto>> findByRental_Id(int id);
 
 }

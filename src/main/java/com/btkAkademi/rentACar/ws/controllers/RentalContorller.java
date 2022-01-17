@@ -33,9 +33,14 @@ public class RentalContorller {
 
 	}
 
-	@PostMapping("add")
-	public Result add(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
-		return this.rentalService.add(createRentalRequest);
+	@PostMapping("addCorporateCustomer")
+	public Result addCorporateCustomer(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
+		return this.rentalService.addCorporateCustomer(createRentalRequest);
+	}
+	
+	@PostMapping("addIndividualCustomer")
+	public Result addIndividualCustomer(@RequestBody @Valid CreateRentalRequest createRentalRequest) {
+		return this.rentalService.addIndividualCustomer(createRentalRequest);
 	}
 
 	@PutMapping("update")

@@ -72,4 +72,6 @@ public class IndividualCustomerManager implements IndividualCustomerService {
 		return new SuccessDataResult<IndividualCustomer>(this.individualCustomerDao.findById(id));
 	}
 
+	
+
 }
