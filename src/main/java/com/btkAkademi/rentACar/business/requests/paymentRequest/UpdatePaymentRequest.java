@@ -2,8 +2,6 @@ package com.btkAkademi.rentACar.business.requests.paymentRequest;
 
 import java.time.LocalDate;
 
-import com.btkAkademi.rentACar.business.requests.accountRequest.CreateAccountRequest;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreatePaymentRequest {
-
+public class UpdatePaymentRequest {
+	private int id;
 	private LocalDate paymentDate;
-	private boolean saveCreditStatus;
+	private int totalAmount;
 	private int rentalId;
-	private CreateAccountRequest account;
-
 }

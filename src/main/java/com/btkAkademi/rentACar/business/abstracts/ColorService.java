@@ -15,4 +15,5 @@ public interface ColorService {
 	Result add(CreateColorRequest createColorRequest);
 
 	Result update(UpdateColorRequest updateColorRequest);
+	
 }

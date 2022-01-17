@@ -12,6 +12,7 @@ import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.dtos.CarMaintenanceListDto;
 import com.btkAkademi.rentACar.business.requests.carMaintenanceRequest.CreateCarMaintenanceRequest;
+import com.btkAkademi.rentACar.business.requests.carMaintenanceRequest.UpdateCarMaintenanceRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
@@ -20,7 +21,6 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.CarMaintenanceDao;
-
 import com.btkAkademi.rentACar.entities.concretes.CarMaintenance;
 
 @Service
@@ -56,8 +56,7 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 	public Result add(CreateCarMaintenanceRequest carMaintenanceRequest) {
 
 		Result result = BusinessRules.run(checkIfCarRental(carMaintenanceRequest.getCarId()),
-				checkIfInMaintenance(carMaintenanceRequest.getCarId())
-				);
+				checkIfInMaintenance(carMaintenanceRequest.getCarId()));
 
 		if (result != null) {
 			return result;
@@ -77,18 +76,41 @@ public class CarMaintenanceManager implements CarMaintenanceService {
 		} else
 			return false;
 	}
+
 	private Result checkIfInMaintenance(int carId) {
-		if(this.carMaintenanceDao.findByCarIdAndDateOfArrivalIsNull(carId) != null) {
+		if (this.carMaintenanceDao.findByCarIdAndDateOfArrivalIsNull(carId) != null) {
 			return new ErrorResult(Messages.carInMaintenance);
 		}
 		return new SuccessResult();
 	}
-	
+
 	private Result checkIfCarRental(int id) {
 		if (this.rentalService.findByCarIdAndReturnDateIsNotNull(id)) {
 			return new ErrorResult(Messages.carInRental);
 		}
 		return new SuccessResult();
+	}
+
+	@Override
+	public Result update(UpdateCarMaintenanceRequest updateCarMaintenanceRequest) {
+		if (this.carMaintenanceDao.existsById(updateCarMaintenanceRequest.getId())) {
+			CarMaintenance carMaintenance = this.carMaintenanceDao.findById(updateCarMaintenanceRequest.getId());
+
+			carMaintenance = this.modelMapperService.forRequest().map(updateCarMaintenanceRequest,
+					CarMaintenance.class);
+			this.carMaintenanceDao.save(carMaintenance);
+			return new SuccessResult(Messages.carMaintenanceUpdated);
+		}
+		return new ErrorResult(Messages.carMaintenanceIsNotFound);
+	}
+
+	@Override
+	public Result deleteById(int id) {
+		if (this.carMaintenanceDao.existsById(id)) {
+			this.carMaintenanceDao.deleteById(id);
+			return new SuccessResult(Messages.carMaintenanceDeleted);
+		}
+		return new SuccessResult(Messages.carMaintenanceIsNotFound);
 	}
 
 }

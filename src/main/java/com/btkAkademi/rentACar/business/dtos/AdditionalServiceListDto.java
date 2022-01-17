@@ -1,4 +1,4 @@
-package com.btkAkademi.rentACar.business.requests.AdditionalServicesRequest;
+package com.btkAkademi.rentACar.business.dtos;
 
 
 
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateAdditionalServiceRequest {
+public class AdditionalServiceListDto {
+
 	private String name;
-	private int rentalId;
+
 	private int price;
-}	
+}

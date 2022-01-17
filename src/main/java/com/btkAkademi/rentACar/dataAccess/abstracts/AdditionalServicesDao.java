@@ -10,6 +10,8 @@ import com.btkAkademi.rentACar.entities.concretes.Customer;
 
 public interface AdditionalServicesDao extends JpaRepository<AdditionalServices, Integer>{
 	List<AdditionalServices> findByRental_Id(int id);
+	
+	AdditionalServices findById(int id);
 
 	
 }

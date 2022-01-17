@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,6 +44,11 @@ public class BrandsController {
 	@PutMapping("update")
 	public Result add(@RequestBody @Valid UpdateBrandRequest updateBrandRequest) {
 		return this.brandService.update(updateBrandRequest);
+	}
+	
+	@DeleteMapping("delete")
+	public Result deleteById(@RequestBody @Valid int id) {
+		return this.brandService.deleteById(id);
 	}
 
 }

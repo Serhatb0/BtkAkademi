@@ -17,4 +17,5 @@ public interface BrandService {
 
 	Result update(UpdateBrandRequest updateBrandRequest);
 
+	Result deleteById(int id);
 }

@@ -87,6 +87,15 @@ public class BrandManager implements BrandService {
 		return new SuccessResult(Messages.brandUpdated);
 	}
 
+	@Override
+	public Result deleteById(int id) {
+		if(this.brandDao.existsById(id)) {
+			this.brandDao.deleteById(id);
+			return new SuccessResult(Messages.brandDeleted);
+		}
+		return new ErrorResult(Messages.brandIsNotFound);
+	}
+
 	
 
 }

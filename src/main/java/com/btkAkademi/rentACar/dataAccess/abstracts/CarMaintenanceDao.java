@@ -8,5 +8,7 @@ public interface CarMaintenanceDao extends JpaRepository<CarMaintenance, Integer
 	
 	
 	CarMaintenance findByCarIdAndDateOfArrivalIsNull(int carId);
+	
+	CarMaintenance findById(int id);
 
 }

@@ -1,6 +1,8 @@
 package com.btkAkademi.rentACar.business.concretes;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,8 +14,10 @@ import com.btkAkademi.rentACar.business.abstracts.CustomerService;
 
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
-
+import com.btkAkademi.rentACar.business.dtos.BrandListDto;
+import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.requests.rentalRequest.CreateRentalRequest;
+import com.btkAkademi.rentACar.business.requests.rentalRequest.UpdateRentalRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
@@ -22,6 +26,7 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.RentalDao;
+import com.btkAkademi.rentACar.entities.concretes.Brand;
 import com.btkAkademi.rentACar.entities.concretes.Customer;
 import com.btkAkademi.rentACar.entities.concretes.Rental;
 
@@ -41,6 +46,14 @@ public class RentalManager implements RentalService {
 		this.carMaintenanceService = carMaintenanceService;
 		this.customerService = customerService;
 	}
+	
+	@Override
+	public DataResult<List<RentalListDto>> getAll() {
+		List<Rental> rentalList = this.rentalDao.findAll();
+		List<RentalListDto> response = rentalList.stream()
+				.map(rental -> modelMapperService.forDto().map(rental, RentalListDto.class)).collect(Collectors.toList());
+		return new SuccessDataResult<List<RentalListDto>>(response);
+	}
 
 	@Override
 	public Result add(CreateRentalRequest createRentalRequest) {
@@ -55,6 +68,24 @@ public class RentalManager implements RentalService {
 
 		this.rentalDao.save(rental);
 		return new SuccessResult(Messages.rentalAdded);
+	}
+
+	@Override
+	public Result update(UpdateRentalRequest updateRentalRequest) {
+		Rental rental = this.rentalDao.findById(updateRentalRequest.getId());
+
+		Result result = BusinessRules.run(
+				checkIfKilometer(rental.getRentedKilometer(), updateRentalRequest.getReturnedKilometer()),
+				checkIfDate(rental.getRentDate(), updateRentalRequest.getReturnDate()));
+
+		if (result != null) {
+			return result;
+		}
+
+		rental = modelMapperService.forRequest().map(updateRentalRequest, Rental.class);
+
+		this.rentalDao.save(rental);
+		return new SuccessResult(Messages.rentalUpdated);
 	}
 
 	private Result checkIfCustomerExist(int customerId) {
@@ -102,5 +133,15 @@ public class RentalManager implements RentalService {
 		return new SuccessDataResult<Rental>(this.rentalDao.findById(id));
 	}
 
+	@Override
+	public Result deleteById(int id) {
+		if(this.rentalDao.existsById(id)) {
+			this.rentalDao.deleteById(id);
+			return new SuccessResult(Messages.rentalDeleted);
+		}
+		return new  ErrorResult(Messages.rentalNotFound);
+	}
+
+	
 
 }
