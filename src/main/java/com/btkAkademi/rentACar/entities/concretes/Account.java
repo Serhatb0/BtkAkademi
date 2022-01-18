@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,7 +33,7 @@ public class Account {
 	String smsPassword;
 //	@Column(name = "user_id")
 //	private int userId;
-
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;

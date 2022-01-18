@@ -11,7 +11,6 @@ import com.btkAkademi.rentACar.business.abstracts.CarService;
 import com.btkAkademi.rentACar.business.abstracts.CorporateCustomerService;
 import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
 import com.btkAkademi.rentACar.business.abstracts.InvoiceService;
-import com.btkAkademi.rentACar.business.abstracts.PaymentService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
@@ -24,8 +23,6 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.InvoiceDao;
-import com.btkAkademi.rentACar.entities.concretes.AdditionalServices;
-import com.btkAkademi.rentACar.entities.concretes.Brand;
 import com.btkAkademi.rentACar.entities.concretes.Car;
 import com.btkAkademi.rentACar.entities.concretes.CorporateCustomer;
 import com.btkAkademi.rentACar.entities.concretes.IndividualCustomer;
@@ -41,15 +38,14 @@ public class InvoiceManager implements InvoiceService {
 	private CorporateCustomerService corporateCustomerService;
 	private CarService carService;
 	private RentalService rentalService;
-	private PaymentService paymentService;
 	private AdditionalServicesService additionalServiceService;
 
+	
 	@Autowired
 	@Lazy
 	public InvoiceManager(ModelMapperService modelMapperService, InvoiceDao invoiceDao,
 			IndividualCustomerService individualCustomerService, CorporateCustomerService corporateCustomerService,
-			CarService carService, RentalService rentalService, PaymentService paymentService,
-			AdditionalServicesService additionalServiceService) {
+			CarService carService, RentalService rentalService, AdditionalServicesService additionalServiceService) {
 		super();
 		this.modelMapperService = modelMapperService;
 		this.invoiceDao = invoiceDao;
@@ -57,9 +53,9 @@ public class InvoiceManager implements InvoiceService {
 		this.corporateCustomerService = corporateCustomerService;
 		this.carService = carService;
 		this.rentalService = rentalService;
-		this.paymentService = paymentService;
 		this.additionalServiceService = additionalServiceService;
 	}
+
 	@Override
 	public DataResult<InvoiceCorporateCustomerListDto> createInvoiceForCorporateCustomer(int rentalId) {
 		DataResult<Car> car = this.carService.findByRentals_Id(rentalId);
@@ -84,6 +80,8 @@ public class InvoiceManager implements InvoiceService {
 		
 		return new SuccessDataResult<InvoiceCorporateCustomerListDto>(invoiceCorporateCustomerListDto);
 	}
+
+	
 
 	@Override
 	public DataResult<InvoiceIndividualCustomerListDto> createInvoiceForIndividualCustomer(int rentalId) {

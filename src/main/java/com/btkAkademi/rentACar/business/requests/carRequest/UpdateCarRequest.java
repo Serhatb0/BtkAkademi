@@ -20,5 +20,13 @@ public class UpdateCarRequest {
 	private int findexScore;
 
 	private int kilometer;
+	
+	private int segmentId;
+	
+	private int colorId;
+	
+	private int brandId;
+	
+	private int minimumAge;
 
 }

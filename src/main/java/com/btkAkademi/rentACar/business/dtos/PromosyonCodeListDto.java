@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PromosyonListDto {
+public class PromosyonCodeListDto {
 	private String promosyonCode;
 
 	private int discountRate;

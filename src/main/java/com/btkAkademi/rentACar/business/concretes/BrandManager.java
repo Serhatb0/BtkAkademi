@@ -14,6 +14,7 @@ import com.btkAkademi.rentACar.business.requests.brandRequests.UpdateBrandReques
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+import com.btkAkademi.rentACar.core.utilities.results.ErrorDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
@@ -95,6 +96,15 @@ public class BrandManager implements BrandService {
 		}
 		return new ErrorResult(Messages.brandIsNotFound);
 	}
+
+	@Override
+	public DataResult<Brand> findById(int id) {
+		if(this.brandDao.existsById(id)) {
+			return new SuccessDataResult<Brand>(this.brandDao.findById(id));
+		}
+		return new ErrorDataResult<>(Messages.brandIsNotFound);
+	}
+	
 
 	
 

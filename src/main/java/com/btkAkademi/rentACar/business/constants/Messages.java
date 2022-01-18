@@ -60,5 +60,18 @@ public class Messages {
 	public static final String promosyonCodeIsNotFound = "promosyon.code.is.not.found";
 	public static final String ageNotEnough = "age.not.enough";
 	public static final String findexScoreNotEnough = "findex.score.not.enough";
+	public static final String carSegmentAdded ="car.segment.added";
+	public static final String carSegmentUpdated = "car.segment.updated";
+	public static final String carSegmentIsNotFound ="car.segment.is.not.found";
+	public static final String carSegmentAlreadyExists ="car.segment.already.exists" ;
+	public static final String carSegmentDeleted = "car.segment.deleted";
+	public static final String noVehiclesAvailableInThisSegment = "no.vehicles.available.in.this.segment";
+	public static final String carIsNotSegmentExist = "car.is.not.segment.exist";
+	public static final String additionalServiceIsNotFound = "additional.service.is.not.found";
+	public static final String individualCustomerUpdated = "individual.customer.updated";
+	public static final String individualCustomerIsNotFound = "individual.customer.is.not.found";
+	public static final String individualCustomerDeleted = "individual.customer.deleted";
+	public static final String promosyonDeleted = "promosyon.deleted";
+	public static final String promosyonIsNotFound = "promosyon.is.not.found";
 
 }

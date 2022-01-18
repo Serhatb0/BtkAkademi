@@ -14,7 +14,7 @@ import com.btkAkademi.rentACar.business.abstracts.CarService;
 import com.btkAkademi.rentACar.business.abstracts.IPosService;
 
 import com.btkAkademi.rentACar.business.abstracts.PaymentService;
-import com.btkAkademi.rentACar.business.abstracts.PromosyonService;
+import com.btkAkademi.rentACar.business.abstracts.PromosyonCodeService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
@@ -32,7 +32,7 @@ import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.PaymentDao;
 import com.btkAkademi.rentACar.entities.concretes.Car;
 import com.btkAkademi.rentACar.entities.concretes.Payment;
-import com.btkAkademi.rentACar.entities.concretes.Promosyon;
+import com.btkAkademi.rentACar.entities.concretes.PromosyonCode;
 import com.btkAkademi.rentACar.entities.concretes.Rental;
 
 @Service
@@ -45,12 +45,12 @@ public class PaymentManager implements PaymentService {
 	private CarService carService;
 	private AccountService accountService;
 	private IPosService posService;
-	private PromosyonService promosyonService;
+	private PromosyonCodeService promosyonService;
 
 	@Autowired
 	public PaymentManager(PaymentDao paymentDao, ModelMapperService mapperService,
 			AdditionalServicesService additionalServicesService, RentalService rentalService, CarService carService,
-			AccountService accountService, IPosService posService, PromosyonService promosyonService) {
+			AccountService accountService, IPosService posService, PromosyonCodeService promosyonService) {
 		super();
 		this.paymentDao = paymentDao;
 		this.mapperService = mapperService;
@@ -106,7 +106,7 @@ public class PaymentManager implements PaymentService {
 
 	private int dailyTotalPriceCalculationPromosyon(int rentalId, int promosyonId) {
 
-		DataResult<Promosyon> promosyon = this.promosyonService.findById(promosyonId);
+		DataResult<PromosyonCode> promosyon = this.promosyonService.findById(promosyonId);
 		int total = dailyTotalPriceCalculation(rentalId);
 		return total - (total) * (promosyon.getData().getDiscountRate()) / 100;
 	}
@@ -144,10 +144,10 @@ public class PaymentManager implements PaymentService {
 	}
 
 	private Result checkIfPromosyonCodeExpire(int promosyonId) {
-		if(checkIfPomosyonExsist(promosyonId).getMessage() == Messages.promosyonCodeIsNotFound|| promosyonId == 0 ) {
+		if(!checkIfPomosyonExsist(promosyonId).isSuccess() || promosyonId == 0 ) {
 			return new SuccessResult();
 		}else {
-			Promosyon promosyon = this.promosyonService.findById(promosyonId).getData();
+			PromosyonCode promosyon = this.promosyonService.findById(promosyonId).getData();
 			if (this.promosyonService.promosyonCodeTime(promosyon.getPromosyonStart(), promosyon.getPromosyonEnd())) {
 				return new SuccessResult();
 			}

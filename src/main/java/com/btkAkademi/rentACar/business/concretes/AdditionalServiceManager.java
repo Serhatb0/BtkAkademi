@@ -12,8 +12,10 @@ import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
 
 import com.btkAkademi.rentACar.business.requests.AdditionalServicesRequest.CreateAdditionalServiceRequest;
 import com.btkAkademi.rentACar.business.requests.AdditionalServicesRequest.UpdateAdditionalServiceRequest;
+import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
@@ -36,7 +38,13 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 
 	@Override
 	public Result add(CreateAdditionalServiceRequest createAdditionalServicesRequest) {
-
+		
+		Result result = BusinessRules.run(checkIfAdditionalServiceNameExists(createAdditionalServicesRequest.getName()));
+		
+		if(result != null) {
+			return result;
+		}
+	
 		AdditionalServices additionalService = this.modelMapperService.forRequest().map(createAdditionalServicesRequest,
 				AdditionalServices.class);
 		this.additionalServicesDao.save(additionalService);
@@ -46,9 +54,8 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 	@Override
 	public DataResult<List<AdditionalServiceListDto>> findByRental_Id(int rentalId) {
 		List<AdditionalServices> additionalServiceList = this.additionalServicesDao.findByRental_Id(rentalId);
-		List<AdditionalServiceListDto> response = additionalServiceList.stream()
-				.map(additionalService -> modelMapperService.forDto()
-						.map(additionalService, AdditionalServiceListDto.class))
+		List<AdditionalServiceListDto> response = additionalServiceList.stream().map(
+				additionalService -> modelMapperService.forDto().map(additionalService, AdditionalServiceListDto.class))
 				.collect(Collectors.toList());
 
 		return new SuccessDataResult<List<AdditionalServiceListDto>>(response);
@@ -56,19 +63,26 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 
 	@Override
 	public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
-		AdditionalServices additionalService = this.additionalServicesDao
-				.findById(updateAdditionalServiceRequest.getId());
+		if (this.additionalServicesDao.existsById(updateAdditionalServiceRequest.getId())) {
+			AdditionalServices additionalService = this.additionalServicesDao
+					.findById(updateAdditionalServiceRequest.getId());
 
-		additionalService = this.modelMapperService.forRequest().map(updateAdditionalServiceRequest,
-				AdditionalServices.class);
-		this.additionalServicesDao.save(additionalService);
-		return new SuccessResult(Messages.additionalServiceUpdated);
+			additionalService = this.modelMapperService.forRequest().map(updateAdditionalServiceRequest,
+					AdditionalServices.class);
+			this.additionalServicesDao.save(additionalService);
+			return new SuccessResult(Messages.additionalServiceUpdated);
+		}
+		return new ErrorResult(Messages.additionalServiceIsNotFound);
 	}
 
 	@Override
 	public Result deleteById(int id) {
-		this.additionalServicesDao.deleteById(id);
-		return new SuccessResult(Messages.additionalServiceDeleted);
+		if (this.additionalServicesDao.existsById(id)) {
+			this.additionalServicesDao.deleteById(id);
+			return new SuccessResult(Messages.additionalServiceDeleted);
+		}
+		return new ErrorResult(Messages.additionalServiceIsNotFound);
+
 	}
 
 	@Override
@@ -78,6 +92,14 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 				additionalService -> modelMapperService.forDto().map(additionalService, AdditionalServiceListDto.class))
 				.collect(Collectors.toList());
 		return new SuccessDataResult<List<AdditionalServiceListDto>>(response);
+	}
+	
+	private Result checkIfAdditionalServiceNameExists(String name) {
+		AdditionalServices additionalServices = this.additionalServicesDao.findByName(name);
+		if (additionalServices != null) {
+			return new ErrorResult(Messages.additionalServiceIsNotFound);
+		}
+		return new SuccessResult();
 	}
 
 }

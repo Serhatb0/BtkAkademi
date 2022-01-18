@@ -17,9 +17,17 @@ public interface CarService {
 
 	Result update(UpdateCarRequest updateCarRequest);
 
-	DataResult<List<CarListDto>> getAllRentalPage(int pageNo, int pageSize);
+	DataResult<List<CarListDto>> findSuitableCar(int pageNo, int pageSize);
 
 	DataResult<Car> findByRentals_Id(int id);
 	
 	DataResult<Car> findById(int id);
+	
+	DataResult<CarListDto> findByCarListDtoId(int id);
+	
+	DataResult<List<Integer>> findAvailableCarBySegment(int segmentId);
+	
+
+
+
 }

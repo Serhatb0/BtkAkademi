@@ -8,6 +8,7 @@ import com.btkAkademi.rentACar.business.requests.brandRequests.UpdateBrandReques
 
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
+import com.btkAkademi.rentACar.entities.concretes.Brand;
 
 public interface BrandService {
 
@@ -18,4 +19,5 @@ public interface BrandService {
 	Result update(UpdateBrandRequest updateBrandRequest);
 
 	Result deleteById(int id);
+	DataResult<Brand> findById(int id);
 }

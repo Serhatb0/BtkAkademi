@@ -13,9 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -56,7 +53,8 @@ public class Rental {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-	
+//	@Column(name ="car_id")
+//	private int carId;
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;
@@ -70,5 +68,3 @@ public class Rental {
 }
 
 
-
-// 

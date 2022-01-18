@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.btkAkademi.rentACar.business.abstracts.ColorService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.dtos.ColorListDto;
@@ -14,12 +13,12 @@ import com.btkAkademi.rentACar.business.requests.colorRequest.UpdateColorRequest
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+import com.btkAkademi.rentACar.core.utilities.results.ErrorDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.ColorDao;
-
 import com.btkAkademi.rentACar.entities.concretes.Color;
 
 @Service
@@ -74,5 +73,13 @@ public class ColorManager implements ColorService {
 		color = modelMapperService.forRequest().map(updateColorRequest, Color.class);
 		this.colorDao.save(color);
 		return new SuccessResult(Messages.colorUpdated);
+	}
+
+	@Override
+	public DataResult<Color> findById(int id) {
+		if(this.colorDao.existsById(id)) {
+			return new SuccessDataResult<Color>(this.colorDao.findById(id));
+		}
+		return new ErrorDataResult<>(Messages.colorIsNotFound);
 	}
 }

@@ -13,5 +13,7 @@ public interface RentalDao extends JpaRepository<Rental, Integer> {
 	Rental findById(int id);
 
 	Page<Rental> findAll(Pageable pageable);
+	
+	Rental findByCarId(int carId);
 
 }

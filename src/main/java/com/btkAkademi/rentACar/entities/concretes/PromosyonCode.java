@@ -2,16 +2,13 @@ package com.btkAkademi.rentACar.entities.concretes;
 
 import java.time.LocalDate;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,18 +18,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "invoices")
-public class Invoice {
+@Table(name = "promosyon_code")
+public class PromosyonCode {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "create_date")
-	private LocalDate createDate;
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "rental_id")
-	private Rental rental;
+	@Column(name = "promosyon_code")
+	private String promosyonCode;
+	@Column(name = "discount_rate")
+	private int discountRate;
+	@Column(name = "promosyon_start")
+	private LocalDate promosyonStart;
+	@Column(name = "promosyon_end")
+	private LocalDate promosyonEnd;
 	
 	
 }

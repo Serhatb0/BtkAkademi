@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

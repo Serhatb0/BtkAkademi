@@ -24,5 +24,6 @@ public class CarListDto {
 	private int findexScore;
 
 	private int kilometer;
+	private int segmentId;
 	
 }

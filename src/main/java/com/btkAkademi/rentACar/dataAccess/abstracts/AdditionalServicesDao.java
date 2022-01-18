@@ -12,6 +12,8 @@ public interface AdditionalServicesDao extends JpaRepository<AdditionalServices,
 	List<AdditionalServices> findByRental_Id(int id);
 	
 	AdditionalServices findById(int id);
+	
+	AdditionalServices findByName(String name);
 
 	
 }

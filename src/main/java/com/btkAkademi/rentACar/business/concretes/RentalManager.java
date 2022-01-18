@@ -17,12 +17,14 @@ import com.btkAkademi.rentACar.business.abstracts.IFindexService;
 import com.btkAkademi.rentACar.business.abstracts.IndividualCustomerService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
+import com.btkAkademi.rentACar.business.dtos.CarListDto;
 import com.btkAkademi.rentACar.business.dtos.RentalListDto;
 import com.btkAkademi.rentACar.business.requests.rentalRequest.CreateRentalRequest;
 import com.btkAkademi.rentACar.business.requests.rentalRequest.UpdateRentalRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
 import com.btkAkademi.rentACar.core.utilities.mapping.ModelMapperService;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
+import com.btkAkademi.rentACar.core.utilities.results.ErrorDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.ErrorResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
@@ -44,6 +46,7 @@ public class RentalManager implements RentalService {
 	private IndividualCustomerService individualCustomerService;
 	private CarService carService;
 	private CorporateCustomerService corporateCustomerService;
+	
 
 	@Autowired
 	public RentalManager(RentalDao rentalDao, ModelMapperService modelMapperService,
@@ -72,6 +75,14 @@ public class RentalManager implements RentalService {
 
 	@Override
 	public Result addCorporateCustomer(CreateRentalRequest createRentalRequest) {
+		if (!checkIfCarMaintenance(createRentalRequest.getCarId()).isSuccess() || !checkIfIsCarAlreadyRented(createRentalRequest.getCarId()).isSuccess()) {
+			CarListDto car = findAvailableCarSegment(carService.findById(createRentalRequest.getCarId()).getData().getCarSegment().getId()).getData();
+			if(car !=null) {
+				createRentalRequest.setCarId(car.getId());
+				
+			} else return new ErrorResult(Messages.noVehiclesAvailableInThisSegment);
+		}
+		
 		DataResult<CorporateCustomer> corporateCustomer  =this.corporateCustomerService.findById(createRentalRequest.getCustomerId());
 		DataResult<Car> car = this.carService.findById(createRentalRequest.getCarId());
 
@@ -90,6 +101,14 @@ public class RentalManager implements RentalService {
 
 	@Override
 	public Result addIndividualCustomer(CreateRentalRequest createRentalRequest) {
+		
+		if (!checkIfCarMaintenance(createRentalRequest.getCarId()).isSuccess() || !checkIfIsCarAlreadyRented(createRentalRequest.getCarId()).isSuccess()) {
+			CarListDto car = findAvailableCarSegment(carService.findById(createRentalRequest.getCarId()).getData().getCarSegment().getId()).getData();
+			if(car !=null) {
+				createRentalRequest.setCarId(car.getId());
+				
+			} else return new ErrorResult(Messages.noVehiclesAvailableInThisSegment);
+		}
 
 		DataResult<IndividualCustomer> individualCustomer = this.individualCustomerService
 				.findById(createRentalRequest.getCustomerId());
@@ -108,7 +127,16 @@ public class RentalManager implements RentalService {
 		this.rentalDao.save(rental);
 		return new SuccessResult(Messages.rentalAdded);
 	}
-
+	
+	
+	
+	private DataResult<CarListDto> findAvailableCarSegment(int SegmentId) {
+		if(carService.findAvailableCarBySegment(SegmentId).isSuccess()) {
+			CarListDto car = carService.findByCarListDtoId(carService.findAvailableCarBySegment(SegmentId).getData().get(0)).getData();
+			return new SuccessDataResult<CarListDto>(car);
+		}else return new ErrorDataResult<CarListDto>();
+	}
+	
 	@Override
 	public Result update(UpdateRentalRequest updateRentalRequest) {
 		Rental rental = this.rentalDao.findById(updateRentalRequest.getId());
@@ -126,6 +154,9 @@ public class RentalManager implements RentalService {
 		this.rentalDao.save(rental);
 		return new SuccessResult(Messages.rentalUpdated);
 	}
+	
+	
+	
 	private Result checkIfIndividualCustomerMinimumAgeIsEnough(LocalDate birthDate, int minimumAge) {
 		int IndividualCustomerAge = Period.between(birthDate, LocalDate.now()).getYears();
 		if (IndividualCustomerAge >= minimumAge) {
@@ -191,6 +222,13 @@ public class RentalManager implements RentalService {
 			return false;
 		} else
 			return true;
+	}
+	private Result checkIfIsCarAlreadyRented(int carId) {
+		if (this.rentalDao.findByCarIdAndReturnDateIsNotNull(carId) != null) {
+			return new SuccessResult();
+		}
+		return new ErrorResult(Messages.carInRental);
+		
 	}
 
 	@Override

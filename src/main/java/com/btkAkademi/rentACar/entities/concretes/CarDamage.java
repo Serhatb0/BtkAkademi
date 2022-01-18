@@ -28,7 +28,7 @@ public class CarDamage {
 	private int id;
 	@Column(name = "description")
 	private String description;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;

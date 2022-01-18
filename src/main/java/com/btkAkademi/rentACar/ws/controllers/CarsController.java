@@ -21,6 +21,7 @@ import com.btkAkademi.rentACar.business.requests.carRequest.UpdateCarRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 
+
 @RestController
 @RequestMapping("/api/cars")
 public class CarsController {
@@ -32,9 +33,10 @@ public class CarsController {
 		this.carService = carService;
 	}
 
-	@GetMapping("getall")
-	public DataResult<List<CarListDto>> getAll() {
-		return this.carService.getAll();
+	@PostMapping("getall")
+	public DataResult<List<CarListDto>>  getAll() {
+	return this.carService.getAll();
+		
 	}
 
 	@PostMapping("add")
@@ -50,7 +52,7 @@ public class CarsController {
 	@GetMapping("getallrentalpage")
 	public DataResult<List<CarListDto>> getAllRentalPage(@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-		return this.carService.getAllRentalPage(pageNo, pageSize);
+		return this.carService.findSuitableCar(pageNo, pageSize);
 	}
 
 }

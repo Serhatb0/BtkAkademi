@@ -22,5 +22,9 @@ public class CreateCarRequest {
 	private int colorId;
 	
 	private int brandId;
+	
+	private int segmentId;
+	
+	private int minimumAge;
 
 }
