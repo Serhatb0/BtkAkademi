@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +23,7 @@ import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/cars")
 public class CarsController {
@@ -33,9 +35,15 @@ public class CarsController {
 		this.carService = carService;
 	}
 
-	@PostMapping("getall")
+	@GetMapping("getall")
 	public DataResult<List<CarListDto>>  getAll() {
 	return this.carService.getAll();
+		
+	}
+	
+	@GetMapping()
+	public DataResult<CarListDto>  findById(@RequestParam int id) {
+	return this.carService.findByCarListDtoId(id);
 		
 	}
 

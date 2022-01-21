@@ -38,10 +38,6 @@ public class Messages {
 	public static final String rentalDeleted = "rental.deleted";
 	public static final String carDamageUpdated = "car.damage.updated";
 	public static final String rentalNotFound = "rental.not.found";
-	public static final String accountAdded = "account.added";
-	public static final String accountUpdated = "account.updated";
-	public static final String accountIsNotFound = "account.is.not.found";
-	public static final String accountDeleted = "account.deleted";
 	public static final String brandDeleted = "brand.deleted";
 	public static final String carDamageIsNotFound = "car.damage.is.not.found";
 	public static final String carDamageDeleted = "car.damage.deleted";
@@ -73,5 +69,9 @@ public class Messages {
 	public static final String individualCustomerDeleted = "individual.customer.deleted";
 	public static final String promosyonDeleted = "promosyon.deleted";
 	public static final String promosyonIsNotFound = "promosyon.is.not.found";
+	public static final String creditCardIsNotFound = "credit.card.is.not.found";
+	public static final String creditCardDeleted = "credit.card.deleted";
+	public static final String creditCardUpdated = "credit.card.updated";
+	public static final String creditCardAdded = "credit.card.added";
 
 }

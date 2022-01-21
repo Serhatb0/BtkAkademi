@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountListDto {
+public class CreditCardListDto {
 	
 	private String creditCard;
 

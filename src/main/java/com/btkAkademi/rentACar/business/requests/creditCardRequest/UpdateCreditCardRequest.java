@@ -1,6 +1,4 @@
-package com.btkAkademi.rentACar.business.requests.paymentRequest;
-
-import java.time.LocalDate;
+package com.btkAkademi.rentACar.business.requests.creditCardRequest;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,10 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreatePaymentRequest {
+public class UpdateCreditCardRequest {
 
-	private LocalDate paymentDate;
-	private int rentalId;
+	@NotNull
+	private int id;
+
+	@NotNull
 	private String expirationDate;
 
 	@NotNull
@@ -29,6 +29,8 @@ public class CreatePaymentRequest {
 	@NotBlank
 	@Size(min = 3,max=3)
 	private String cvv;
-	private int promosyonId;
+	
+	@NotNull
+	private int userId;
 
 }

@@ -23,6 +23,7 @@ public interface CarService {
 	
 	DataResult<Car> findById(int id);
 	
+	
 	DataResult<CarListDto> findByCarListDtoId(int id);
 	
 	DataResult<List<Integer>> findAvailableCarBySegment(int segmentId);

@@ -2,7 +2,7 @@ package com.btkAkademi.rentACar.business.dtos;
 
 import java.time.LocalDate;
 
-import com.btkAkademi.rentACar.business.requests.accountRequest.CreateAccountRequest;
+import com.btkAkademi.rentACar.business.requests.creditCardRequest.CreateCreditCardRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +16,5 @@ public class PaymentListDto {
 	private LocalDate paymentDate;
 	private boolean saveCreditStatus;
 	private int rentalId;
-	private CreateAccountRequest account;
+	private CreateCreditCardRequest account;
 }

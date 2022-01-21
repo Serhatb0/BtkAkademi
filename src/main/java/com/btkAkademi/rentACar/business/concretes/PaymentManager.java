@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.btkAkademi.rentACar.business.abstracts.AccountService;
+import com.btkAkademi.rentACar.business.abstracts.CreditCardService;
 import com.btkAkademi.rentACar.business.abstracts.AdditionalServicesService;
 import com.btkAkademi.rentACar.business.abstracts.CarService;
 import com.btkAkademi.rentACar.business.abstracts.IPosService;
@@ -19,7 +19,7 @@ import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
 import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
-import com.btkAkademi.rentACar.business.requests.accountRequest.CreateAccountRequest;
+import com.btkAkademi.rentACar.business.requests.creditCardRequest.CreateCreditCardRequest;
 import com.btkAkademi.rentACar.business.requests.paymentRequest.CreatePaymentRequest;
 import com.btkAkademi.rentACar.business.requests.paymentRequest.UpdatePaymentRequest;
 import com.btkAkademi.rentACar.core.utilities.business.BusinessRules;
@@ -43,30 +43,30 @@ public class PaymentManager implements PaymentService {
 	private AdditionalServicesService additionalServicesService;
 	private RentalService rentalService;
 	private CarService carService;
-	private AccountService accountService;
+	private CreditCardService creditCardService;
 	private IPosService posService;
 	private PromosyonCodeService promosyonService;
 
+	
+	
 	@Autowired
 	public PaymentManager(PaymentDao paymentDao, ModelMapperService mapperService,
 			AdditionalServicesService additionalServicesService, RentalService rentalService, CarService carService,
-			AccountService accountService, IPosService posService, PromosyonCodeService promosyonService) {
+			CreditCardService creditCardService, IPosService posService, PromosyonCodeService promosyonService) {
 		super();
 		this.paymentDao = paymentDao;
 		this.mapperService = mapperService;
 		this.additionalServicesService = additionalServicesService;
 		this.rentalService = rentalService;
 		this.carService = carService;
-		this.accountService = accountService;
+		this.creditCardService = creditCardService;
 		this.posService = posService;
-
 		this.promosyonService = promosyonService;
 	}
 
 	@Override
 	public Result add(CreatePaymentRequest createPaymentRequest) {
 		Result result = BusinessRules.run(checkIfPayment(createPaymentRequest.getRentalId()),
-				checkIfCreditCardValid(createPaymentRequest.getAccount()),
 				checkIfPomosyonExsist(createPaymentRequest.getPromosyonId()),
 				checkIfPromosyonCodeExpire(createPaymentRequest.getPromosyonId()));
 
@@ -74,9 +74,6 @@ public class PaymentManager implements PaymentService {
 			return result;
 		}
 
-		if (checkIfSaveCredit(createPaymentRequest.isSaveCreditStatus())) {
-			this.accountService.add(createPaymentRequest.getAccount());
-		}
 
 		Payment payment = mapperService.forRequest().map(createPaymentRequest, Payment.class);
 		if (isThereCodeOrNot(createPaymentRequest.getPromosyonId())) {
@@ -163,7 +160,7 @@ public class PaymentManager implements PaymentService {
 		return new SuccessResult();
 	}
 
-	private Result checkIfCreditCardValid(CreateAccountRequest account) {
+	private Result checkIfCreditCardValid(CreateCreditCardRequest account) {
 		return this.posService.checkIfCreditCardIsValid(account);
 	}
 

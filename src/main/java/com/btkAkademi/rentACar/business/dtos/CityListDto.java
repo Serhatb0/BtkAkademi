@@ -1,7 +1,5 @@
 package com.btkAkademi.rentACar.business.dtos;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarSegmentListDto {
+public class CityListDto {
 	private int id;
-	private String segmentName;
+	private String name;
 }

@@ -12,42 +12,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.btkAkademi.rentACar.business.abstracts.AccountService;
-import com.btkAkademi.rentACar.business.dtos.AccountListDto;
+import com.btkAkademi.rentACar.business.abstracts.CreditCardService;
+import com.btkAkademi.rentACar.business.dtos.CreditCardListDto;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
 import com.btkAkademi.rentACar.business.requests.AdditionalServicesRequest.CreateAdditionalServiceRequest;
 import com.btkAkademi.rentACar.business.requests.AdditionalServicesRequest.UpdateAdditionalServiceRequest;
-import com.btkAkademi.rentACar.business.requests.accountRequest.CreateAccountRequest;
-import com.btkAkademi.rentACar.business.requests.accountRequest.UpdateAccountRequest;
+import com.btkAkademi.rentACar.business.requests.creditCardRequest.CreateCreditCardRequest;
+import com.btkAkademi.rentACar.business.requests.creditCardRequest.UpdateCreditCardRequest;
 import com.btkAkademi.rentACar.core.utilities.results.DataResult;
 import com.btkAkademi.rentACar.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/accounts")
-public class AccountController {
+public class CreditCardController {
 	
-	private AccountService accountService;
+	private CreditCardService accountService;
 	
 	
 	
-	public AccountController(AccountService accountService) {
+	public CreditCardController(CreditCardService accountService) {
 		super();
 		this.accountService = accountService;
 	}
 
 	@GetMapping("getall")
-	public DataResult<List<AccountListDto>> getAll() {
+	public DataResult<List<CreditCardListDto>> getAll() {
 		return this.accountService.getAll();
 	}
 
 	@PostMapping("add")
-	public Result add(@RequestBody @Valid CreateAccountRequest createAccountRequest) {
-		return this.accountService.add(createAccountRequest);
+	public Result add(@RequestBody @Valid CreateCreditCardRequest createCreditCardRequest) {
+		return this.accountService.add(createCreditCardRequest);
 	}
 
 	@PutMapping("update")
-	public Result add(@RequestBody @Valid UpdateAccountRequest updateAccountRequest) {
-		return this.accountService.update(updateAccountRequest);
+	public Result add(@RequestBody @Valid UpdateCreditCardRequest updateCreditCardRequest) {
+		return this.accountService.update(updateCreditCardRequest);
 	}
 
 	@DeleteMapping("delete")

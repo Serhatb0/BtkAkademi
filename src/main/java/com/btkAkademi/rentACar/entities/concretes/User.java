@@ -34,6 +34,6 @@ public class User {
 	private String password;
 
 	@OneToMany(mappedBy = "user")
-	private List<Account> accounts;
+	private List<CreditCard> accounts;
 
 }

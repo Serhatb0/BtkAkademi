@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -37,5 +37,9 @@ public class Payment {
 	@OneToOne
 	@JoinColumn(name = "rental_id")
 	private Rental rental;
+	
+	@ManyToOne
+	@JoinColumn(name = "credit_card_id")
+	private CreditCard creditCard;
 
 }

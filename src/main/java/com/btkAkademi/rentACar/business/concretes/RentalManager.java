@@ -66,7 +66,7 @@ public class RentalManager implements RentalService {
 
 	@Override
 	public DataResult<List<RentalListDto>> getAll() {
-		List<Rental> rentalList = this.rentalDao.findAll();
+		List<Rental> rentalList = this.rentalDao.findByAndReturnDateIsNull();
 		List<RentalListDto> response = rentalList.stream()
 				.map(rental -> modelMapperService.forDto().map(rental, RentalListDto.class))
 				.collect(Collectors.toList());
