@@ -21,9 +21,11 @@ public interface CarService {
 
 	DataResult<Car> findByRentals_Id(int id);
 	
+	
 	DataResult<Car> findById(int id);
 	
-	
+	DataResult<List<CarListDto>> findByCarSegmentName(String segmentName);
+		
 	DataResult<CarListDto> findByCarListDtoId(int id);
 	
 	DataResult<List<Integer>> findAvailableCarBySegment(int segmentId);

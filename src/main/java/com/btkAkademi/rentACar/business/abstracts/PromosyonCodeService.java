@@ -25,5 +25,10 @@ public interface PromosyonCodeService {
 	Result update(UpdatePromosyonCodeRequest updatePromosyonRequest);
 
 	Result deleteById(int id);
+	
+	
+	PromosyonCode findByPromosyonCode(String promosyonCode);
+	
+	boolean  checkPromoCode(String promoCode);
 
 }

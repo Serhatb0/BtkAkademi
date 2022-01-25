@@ -73,5 +73,9 @@ public class Messages {
 	public static final String creditCardDeleted = "credit.card.deleted";
 	public static final String creditCardUpdated = "credit.card.updated";
 	public static final String creditCardAdded = "credit.card.added";
+	public static final String additionalRentalItemDeleted = "additional.rental.item.deleted";
+	public static final String additionalRentalItemIsNotFound = "additional.rental.item.is.not.found";
+	public static final String additionalRentalItemUpdated = "additional.rental.item.updated";
+	public static final String additionalRentalItemAdded = "additional.rental.item.added";
 
 }

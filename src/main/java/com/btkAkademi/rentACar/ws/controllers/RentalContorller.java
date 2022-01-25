@@ -54,6 +54,11 @@ public class RentalContorller {
 	public DataResult<List<RentalListDto>> getAll() {
 		return this.rentalService.getAll();
 	}
+	
+	@GetMapping()
+	public DataResult<RentalListDto> findById(int id) {
+		return this.rentalService.findByListDtoId(id);
+	}
 
 	@DeleteMapping("delete")
 	public Result deleteById(@RequestBody @Valid int id) {

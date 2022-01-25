@@ -18,6 +18,5 @@ public interface AdditionalServicesService {
 
 	Result deleteById(int id);
 
-	DataResult<List<AdditionalServiceListDto>> findByRental_Id(int id);
-
+	
 }

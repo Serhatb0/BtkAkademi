@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 
 @RestController
 @RequestMapping("/api/promosyonCodes")
+@CrossOrigin
 public class PromosyonCodeController {
 	
 	private PromosyonCodeService promosyonService;
@@ -27,6 +29,11 @@ public class PromosyonCodeController {
 	public PromosyonCodeController(PromosyonCodeService promosyonService) {
 		super();
 		this.promosyonService = promosyonService;
+	}
+	
+	@GetMapping()
+	public boolean checkPromoCode(String promoCode) {
+		return this.promosyonService.checkPromoCode(promoCode);
 	}
 	
 	@GetMapping("getall")

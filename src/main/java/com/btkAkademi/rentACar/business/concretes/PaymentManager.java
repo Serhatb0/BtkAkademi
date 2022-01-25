@@ -1,14 +1,13 @@
 package com.btkAkademi.rentACar.business.concretes;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.btkAkademi.rentACar.business.abstracts.CreditCardService;
+import com.btkAkademi.rentACar.business.abstracts.AdditionalRentalItemService;
 import com.btkAkademi.rentACar.business.abstracts.AdditionalServicesService;
 import com.btkAkademi.rentACar.business.abstracts.CarService;
 import com.btkAkademi.rentACar.business.abstracts.IPosService;
@@ -17,6 +16,7 @@ import com.btkAkademi.rentACar.business.abstracts.PaymentService;
 import com.btkAkademi.rentACar.business.abstracts.PromosyonCodeService;
 import com.btkAkademi.rentACar.business.abstracts.RentalService;
 import com.btkAkademi.rentACar.business.constants.Messages;
+import com.btkAkademi.rentACar.business.dtos.AdditionalRentalItemListDto;
 import com.btkAkademi.rentACar.business.dtos.AdditionalServiceListDto;
 import com.btkAkademi.rentACar.business.dtos.PaymentListDto;
 import com.btkAkademi.rentACar.business.requests.creditCardRequest.CreateCreditCardRequest;
@@ -40,7 +40,7 @@ public class PaymentManager implements PaymentService {
 
 	private PaymentDao paymentDao;
 	private ModelMapperService mapperService;
-	private AdditionalServicesService additionalServicesService;
+	private AdditionalRentalItemService additionalRentalItemService;
 	private RentalService rentalService;
 	private CarService carService;
 	private CreditCardService creditCardService;
@@ -48,15 +48,14 @@ public class PaymentManager implements PaymentService {
 	private PromosyonCodeService promosyonService;
 
 	
-	
 	@Autowired
 	public PaymentManager(PaymentDao paymentDao, ModelMapperService mapperService,
-			AdditionalServicesService additionalServicesService, RentalService rentalService, CarService carService,
+			AdditionalRentalItemService additionalRentalItemService, RentalService rentalService, CarService carService,
 			CreditCardService creditCardService, IPosService posService, PromosyonCodeService promosyonService) {
 		super();
 		this.paymentDao = paymentDao;
 		this.mapperService = mapperService;
-		this.additionalServicesService = additionalServicesService;
+		this.additionalRentalItemService = additionalRentalItemService;
 		this.rentalService = rentalService;
 		this.carService = carService;
 		this.creditCardService = creditCardService;
@@ -74,15 +73,10 @@ public class PaymentManager implements PaymentService {
 			return result;
 		}
 
-
 		Payment payment = mapperService.forRequest().map(createPaymentRequest, Payment.class);
-		if (isThereCodeOrNot(createPaymentRequest.getPromosyonId())) {
-			payment.setTotalAmount(dailyTotalPriceCalculation(createPaymentRequest.getRentalId()));
-		} else {
-			payment.setTotalAmount(dailyTotalPriceCalculationPromosyon(createPaymentRequest.getRentalId(),
-					createPaymentRequest.getPromosyonId()));
 
-		}
+		payment.setTotalAmount(
+				totalCalculation(createPaymentRequest.getRentalId(), createPaymentRequest.getPromosyonId()));
 
 		this.paymentDao.save(payment);
 		return new SuccessResult(Messages.paymentCompleted);
@@ -90,10 +84,10 @@ public class PaymentManager implements PaymentService {
 	}
 
 	private int additionalServiceCalculation(int rentalId) {
-		List<AdditionalServiceListDto> additionalServices = this.additionalServicesService.findByRental_Id(rentalId)
+		List<AdditionalRentalItemListDto> additionalServices = this.additionalRentalItemService.findByRentalId(rentalId)
 				.getData();
 		int total = 0;
-		for (AdditionalServiceListDto additional : additionalServices) {
+		for (AdditionalRentalItemListDto additional : additionalServices) {
 			total += additional.getPrice();
 
 		}
@@ -101,34 +95,31 @@ public class PaymentManager implements PaymentService {
 
 	}
 
-	private int dailyTotalPriceCalculationPromosyon(int rentalId, int promosyonId) {
-
-		DataResult<PromosyonCode> promosyon = this.promosyonService.findById(promosyonId);
-		int total = dailyTotalPriceCalculation(rentalId);
-		return total - (total) * (promosyon.getData().getDiscountRate()) / 100;
-	}
-
-	private int dailyTotalPriceCalculation(int rentalId) {
+	private int totalCalculation(int rentalId, int promosyonId) {
 		DataResult<Car> car = this.carService.findByRentals_Id(rentalId);
 		DataResult<Rental> rental = this.rentalService.findById(rentalId);
-		int total = additionalServiceCalculation(rentalId);
-//		Period rentDay = Period.between(rental.getData().getRentDate(),rental.getData().getReturnDate());
+		int additionalTotal = additionalServiceCalculation(rentalId);
 		int rentDay = rental.getData().getReturnDate().getDayOfMonth() - rental.getData().getRentDate().getDayOfMonth();
 		if (rentDay == 0) {
 			rentDay = 1;
 		}
-
-		return (int) (total + rentDay * car.getData().getDailyPrice());
-
-	}
-
-	private boolean isThereCodeOrNot(int promosyonId) {
-		if (promosyonId == 0) {
-			return true;
+		int total = (int) (additionalTotal + rentDay * car.getData().getDailyPrice());
+		if (this.promosyonService.exsistById(promosyonId)) {
+			DataResult<PromosyonCode> promosyon = this.promosyonService.findById(promosyonId);
+			int discountAmount = (int) (total * (promosyon.getData().getDiscountRate()) / 100);
+			return total - discountAmount;
 		}
-		return false;
+		return total;
 
 	}
+
+//	private boolean isThereCodeOrNot(int promosyonId) {
+//		if (promosyonId == 0) {
+//			return true;
+//		}
+//		return false;
+//
+//	}
 
 	private Result checkIfPomosyonExsist(int promosyonId) {
 		if (promosyonId != 0) {
@@ -141,16 +132,16 @@ public class PaymentManager implements PaymentService {
 	}
 
 	private Result checkIfPromosyonCodeExpire(int promosyonId) {
-		if(!checkIfPomosyonExsist(promosyonId).isSuccess() || promosyonId == 0 ) {
+		if (!checkIfPomosyonExsist(promosyonId).isSuccess() || promosyonId == 0) {
 			return new SuccessResult();
-		}else {
+		} else {
 			PromosyonCode promosyon = this.promosyonService.findById(promosyonId).getData();
 			if (this.promosyonService.promosyonCodeTime(promosyon.getPromosyonStart(), promosyon.getPromosyonEnd())) {
 				return new SuccessResult();
 			}
 			return new ErrorResult(Messages.expiredTime);
 		}
-		
+
 	}
 
 	private Result checkIfPayment(int rentalId) {

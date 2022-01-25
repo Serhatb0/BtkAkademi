@@ -23,10 +23,14 @@ public interface RentalService {
 	
 	boolean findByCarIdAndReturnDateIsNotNull(int id);
 	
-	
 	DataResult<Rental> findById(int id);
+	
+	DataResult<RentalListDto> findByListDtoId(int id);
 	
 	Result deleteById(int id);
 	
+	boolean exsistById(int id);
+	
+	boolean findByIdAndPromosyonCodeIsNull(int id);
 
 }

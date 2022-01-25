@@ -19,4 +19,5 @@ public class UpdateRentalRequest {
 	private LocalDate rentDate;
 	private int customerId;
 	private int carId;
+	private String promosyonCode;
 }

@@ -46,6 +46,12 @@ public class CarsController {
 	return this.carService.findByCarListDtoId(id);
 		
 	}
+	
+	@GetMapping("findBySegmentName")
+	public DataResult<List<CarListDto>>  findBySegmentName(@RequestParam String segmentName) {
+	return this.carService.findByCarSegmentName(segmentName);
+		
+	}
 
 	@PostMapping("add")
 	public Result add(@RequestBody @Valid CreateCarRequest createCarRequest) {

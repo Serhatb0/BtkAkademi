@@ -1,15 +1,19 @@
 package com.btkAkademi.rentACar.entities.concretes;
 
-import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,23 +23,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "promosyon_code")
-public class PromosyonCode {
+@Table(name = "additional_services")
+public class AdditionalService {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "promosyon_code")
-	private String promosyonCode;
-	@Column(name = "discount_rate")
-	private int discountRate;
-	@Column(name = "promosyon_start")
-	private LocalDate promosyonStart;
-	@Column(name = "promosyon_end")
-	private LocalDate promosyonEnd;
+	@Column(name = "name")
+	private String name;
+	@Column(name = "price")
+	private int price;
 	
-	@OneToMany(mappedBy = "promosyonCode")
-	private List<Rental> rentals;
+
 	
 	
+
+    @OneToMany(mappedBy = "additionalService")
+    private List<AdditionalRentalItem> additionalRentalItems;
 }

@@ -20,7 +20,7 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.AdditionalServicesDao;
-import com.btkAkademi.rentACar.entities.concretes.AdditionalServices;
+import com.btkAkademi.rentACar.entities.concretes.AdditionalService;
 
 @Service
 public class AdditionalServiceManager implements AdditionalServicesService {
@@ -45,30 +45,22 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 			return result;
 		}
 	
-		AdditionalServices additionalService = this.modelMapperService.forRequest().map(createAdditionalServicesRequest,
-				AdditionalServices.class);
+		AdditionalService additionalService = this.modelMapperService.forRequest().map(createAdditionalServicesRequest,
+				AdditionalService.class);
 		this.additionalServicesDao.save(additionalService);
 		return new SuccessResult(Messages.additionalServiceAdded);
 	}
 
-	@Override
-	public DataResult<List<AdditionalServiceListDto>> findByRental_Id(int rentalId) {
-		List<AdditionalServices> additionalServiceList = this.additionalServicesDao.findByRental_Id(rentalId);
-		List<AdditionalServiceListDto> response = additionalServiceList.stream().map(
-				additionalService -> modelMapperService.forDto().map(additionalService, AdditionalServiceListDto.class))
-				.collect(Collectors.toList());
-
-		return new SuccessDataResult<List<AdditionalServiceListDto>>(response);
-	}
+	
 
 	@Override
 	public Result update(UpdateAdditionalServiceRequest updateAdditionalServiceRequest) {
 		if (this.additionalServicesDao.existsById(updateAdditionalServiceRequest.getId())) {
-			AdditionalServices additionalService = this.additionalServicesDao
+			AdditionalService additionalService = this.additionalServicesDao
 					.findById(updateAdditionalServiceRequest.getId());
 
 			additionalService = this.modelMapperService.forRequest().map(updateAdditionalServiceRequest,
-					AdditionalServices.class);
+					AdditionalService.class);
 			this.additionalServicesDao.save(additionalService);
 			return new SuccessResult(Messages.additionalServiceUpdated);
 		}
@@ -87,7 +79,7 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 
 	@Override
 	public DataResult<List<AdditionalServiceListDto>> getAll() {
-		List<AdditionalServices> additionalServicesList = this.additionalServicesDao.findAll();
+		List<AdditionalService> additionalServicesList = this.additionalServicesDao.findAll();
 		List<AdditionalServiceListDto> response = additionalServicesList.stream().map(
 				additionalService -> modelMapperService.forDto().map(additionalService, AdditionalServiceListDto.class))
 				.collect(Collectors.toList());
@@ -95,7 +87,7 @@ public class AdditionalServiceManager implements AdditionalServicesService {
 	}
 	
 	private Result checkIfAdditionalServiceNameExists(String name) {
-		AdditionalServices additionalServices = this.additionalServicesDao.findByName(name);
+		AdditionalService additionalServices = this.additionalServicesDao.findByName(name);
 		if (additionalServices != null) {
 			return new ErrorResult(Messages.additionalServiceIsNotFound);
 		}

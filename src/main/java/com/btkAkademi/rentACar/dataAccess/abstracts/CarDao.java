@@ -29,6 +29,9 @@ public interface CarDao extends JpaRepository<Car, Integer> {
 	
 	Car findByRentals_Id(int id);
 	
+
+	List<Car> findByCarSegment_SegmentName(String segmentName);
+	
 	List<Car> findByCarSegmentId(int segmentId);
 
 }

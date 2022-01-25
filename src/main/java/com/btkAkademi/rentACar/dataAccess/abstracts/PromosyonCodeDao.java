@@ -8,4 +8,10 @@ public interface PromosyonCodeDao extends JpaRepository<PromosyonCode, Integer>{
 	
 	PromosyonCode findById(int id);
 
+	
+	boolean existsByPromosyonCode(String promosyonCode);
+	
+	PromosyonCode findByPromosyonCode(String promosyonCode);
+	
+	
 }

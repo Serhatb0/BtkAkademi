@@ -22,9 +22,13 @@ public class InvoiceIndividualCustomerListDto {
 	private double dailyPrice;
 	private LocalDate rentDate;
 	private LocalDate returnedDate;
+	private double rentTotalPrice;
 	private double totalPrice;
 	private double additionalTotalPrice;
+	private double discountAmount;
 	LocalDate creationDate;
 	private List<AdditionalServiceListDto> additonalServices;
+	
+
 
 }

@@ -18,6 +18,7 @@ import com.btkAkademi.rentACar.core.utilities.results.Result;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessDataResult;
 import com.btkAkademi.rentACar.core.utilities.results.SuccessResult;
 import com.btkAkademi.rentACar.dataAccess.abstracts.PromosyonCodeDao;
+import com.btkAkademi.rentACar.entities.concretes.Brand;
 import com.btkAkademi.rentACar.entities.concretes.PromosyonCode;
 
 @Service
@@ -35,6 +36,7 @@ public class PromosyonCodeManager implements PromosyonCodeService {
 
 	@Override
 	public DataResult<PromosyonCode> findById(int id) {
+	
 		return new SuccessDataResult<PromosyonCode>(this.promosyonDao.findById(id));
 	}
 
@@ -62,7 +64,7 @@ public class PromosyonCodeManager implements PromosyonCodeService {
 
 	@Override
 	public boolean promosyonCodeTime(LocalDate promosyonStart, LocalDate promosyonEnd) {
-		int promosyonCodeTime = LocalDate.now().getDayOfMonth() -promosyonEnd.getDayOfMonth()  ;
+		int promosyonCodeTime = LocalDate.now().getDayOfMonth() - promosyonEnd.getDayOfMonth();
 		if (promosyonCodeTime <= 0) {
 			return true;
 		}
@@ -72,9 +74,9 @@ public class PromosyonCodeManager implements PromosyonCodeService {
 
 	@Override
 	public Result update(UpdatePromosyonCodeRequest updatePromosyonRequest) {
-		if(this.promosyonDao.existsById(updatePromosyonRequest.getId())) {
+		if (this.promosyonDao.existsById(updatePromosyonRequest.getId())) {
 			PromosyonCode promosyonCode = this.promosyonDao.findById(updatePromosyonRequest.getId());
-					promosyonCode = modelMapperService.forRequest().map(updatePromosyonRequest, PromosyonCode.class);
+			promosyonCode = modelMapperService.forRequest().map(updatePromosyonRequest, PromosyonCode.class);
 			this.promosyonDao.save(promosyonCode);
 			return new SuccessResult(Messages.brandUpdated);
 		}
@@ -83,12 +85,31 @@ public class PromosyonCodeManager implements PromosyonCodeService {
 
 	@Override
 	public Result deleteById(int id) {
-		if(this.promosyonDao.existsById(id)) {
+		if (this.promosyonDao.existsById(id)) {
 			this.promosyonDao.deleteById(id);
 			return new SuccessResult(Messages.promosyonDeleted);
 		}
-		
+
 		return new ErrorResult(Messages.promosyonIsNotFound);
+	}
+
+	@Override
+	public PromosyonCode findByPromosyonCode(String promosyonCode) {
+		return this.promosyonDao.findByPromosyonCode(promosyonCode);
+	}
+
+	@Override
+	public boolean checkPromoCode(String promoCode) {
+		if (this.promosyonDao.existsByPromosyonCode(promoCode)) {
+			PromosyonCode promosyonCode = this.findByPromosyonCode(promoCode);
+			int promosyonCodeTime = LocalDate.now().getDayOfMonth() - promosyonCode.getPromosyonEnd().getDayOfMonth();
+			if (promosyonCodeTime <= 0) {
+				return true;
+			}
+
+		}
+		return false;
+
 	}
 
 }

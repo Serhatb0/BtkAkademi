@@ -150,4 +150,13 @@ public class CarManager implements CarService {
 			return new ErrorDataResult<>(Messages.carIsNotFound);
 	}
 
+	@Override
+	public DataResult<List<CarListDto>> findByCarSegmentName(String segmentName) {
+		List<Car> carList = this.carDao.findByCarSegment_SegmentName(segmentName);
+		List<CarListDto> response = carList.stream().map(car -> modelMapperService.forDto().map(car, CarListDto.class))
+				.collect(Collectors.toList());
+		return new SuccessDataResult<List<CarListDto>>(response);
+	}
+
+
 }

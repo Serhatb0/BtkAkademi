@@ -53,17 +53,21 @@ public class Rental {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-//	@Column(name ="car_id")
-//	private int carId;
+	
+	@ManyToOne
+	@JoinColumn(name = "promosyon_code_id")
+	private PromosyonCode promosyonCode;
+	
 	@ManyToOne
 	@JoinColumn(name = "car_id")
 	private Car car;
 
-	@OneToMany(mappedBy = "rental")
-	private List<AdditionalServices> addtionalServices;
 	
 	@OneToOne(mappedBy = "rental")
 	private Payment payment;
+	
+	@OneToMany(mappedBy = "rental")
+	private List<AdditionalRentalItem>additionalRentalItems;
 
 }
 
