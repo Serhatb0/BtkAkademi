@@ -31,10 +31,7 @@ public class PromosyonCodeController {
 		this.promosyonService = promosyonService;
 	}
 	
-	@GetMapping()
-	public boolean checkPromoCode(String promoCode) {
-		return this.promosyonService.checkPromoCode(promoCode);
-	}
+
 	
 	@GetMapping("getall")
 	public DataResult<List<PromosyonCodeListDto>> getAll() {

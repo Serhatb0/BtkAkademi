@@ -225,13 +225,8 @@ public class RentalManager implements RentalService {
 		return new SuccessResult();
 	}
 
-	private Result checkIfDate(LocalDate rentDate, LocalDate returnDate) {
 
-		if (!returnDate.isAfter(rentDate)) {
-			return new ErrorResult(Messages.rentalDateError);
-		}
-		return new SuccessResult();
-	}
+
 
 	private Result checkIfCarMaintenance(int carId) {
 		if (carMaintenanceService.findByCarIdAndDateOfArrivalIsNull(carId)) {

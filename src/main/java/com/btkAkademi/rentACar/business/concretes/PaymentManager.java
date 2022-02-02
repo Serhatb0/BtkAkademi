@@ -52,7 +52,6 @@ public class PaymentManager implements PaymentService {
 	public PaymentManager(PaymentDao paymentDao, ModelMapperService mapperService,
 			AdditionalRentalItemService additionalRentalItemService, RentalService rentalService, CarService carService,
 			CreditCardService creditCardService, IPosService posService, PromosyonCodeService promosyonService) {
-		super();
 		this.paymentDao = paymentDao;
 		this.mapperService = mapperService;
 		this.additionalRentalItemService = additionalRentalItemService;
@@ -113,13 +112,8 @@ public class PaymentManager implements PaymentService {
 
 	}
 
-//	private boolean isThereCodeOrNot(int promosyonId) {
-//		if (promosyonId == 0) {
-//			return true;
-//		}
-//		return false;
-//
-//	}
+
+
 
 	private Result checkIfPomosyonExsist(int promosyonId) {
 		if (promosyonId != 0) {
@@ -151,13 +145,7 @@ public class PaymentManager implements PaymentService {
 		return new SuccessResult();
 	}
 
-	private Result checkIfCreditCardValid(CreateCreditCardRequest account) {
-		return this.posService.checkIfCreditCardIsValid(account);
-	}
 
-	private boolean checkIfSaveCredit(boolean status) {
-		return status;
-	}
 
 	@Override
 	public DataResult<List<PaymentListDto>> getAll() {
